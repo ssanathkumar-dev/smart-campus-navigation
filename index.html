@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Navigation System</title>
+    
+    <link rel="stylesheet" href="css/style.css">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      crossorigin=""/>
+</head>
+<body>
+
+    <header>
+        <h1>Campus Navigation System</h1>
+    </header>
+
+    <div class="main-container">
+        
+        <div id="map"></div>
+
+        <div class="sidebar">
+
+            <div class="controls fade-in">
+                <input type="text" id="searchInput" placeholder="Search for a location...">
+                <button id="searchButton">Search</button>
+            </div>
+            
+            <hr class="fade-in">
+
+            <div id="info-panel" class="fade-in">
+                <h2>Location Details</h2>
+                <div id="location-name">Select a building on the map or search.</div>
+                <div id="location-description"></div>
+                <div id="location-coordinates"></div>
+            </div>
+
+            <hr class="fade-in">
+
+            <div id="navigation-panel" class="fade-in">
+                <h2>Route Planner</h2>
+                <div class="route-inputs">
+                    <input type="text" id="startInput" placeholder="Start location">
+                    <input type="text" id="endInput" placeholder="End location">
+                </div>
+                <button id="getDirectionsButton">Get Directions</button>
+                <button id="clearRouteButton">Clear Route</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        crossorigin=""></script>
+
+    <script src="js/script.js"></script>
+
+</body>
+</html>
