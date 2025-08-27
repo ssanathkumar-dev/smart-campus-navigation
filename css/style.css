@@ -106,7 +106,6 @@ input[type="text"]:focus {
     }
 }
 
-/* Delay for a staggered animation effect */
 .controls { animation-delay: 0.1s; }
 hr { animation-delay: 0.3s; }
 #info-panel { animation-delay: 0.5s; }
