@@ -1,7 +1,15 @@
 # Smart Campus Navigation System
 
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+
+This project is licensed under the MIT License – see the [LICENSE](LICENSE) file for details.
+
+---
+
 ## Project Overview
 This project is a web-based campus navigation system designed to help students and visitors easily find their way around the Maharaja Institute of Technology, Mysore. It uses a custom map of the campus to provide turn-by-turn directions and locate key points of interest, from buildings to individual classrooms.
+
+---
 
 ## Key Features
 - **Interactive Map:** A responsive, zoomable, and pannable map of the entire campus.
@@ -10,10 +18,14 @@ This project is a web-based campus navigation system designed to help students a
 - **Search Functionality:** A user-friendly search bar to quickly find any location, whether it's a building or a specific classroom.
 - **Pathfinding Algorithm:** An intelligent algorithm (like A*) to calculate the shortest path between two points.
 
+---
+
 ## Technology Stack
 - **Frontend:** HTML, CSS, JavaScript
 - **Mapping Library:** [Leaflet.js](https://leafletjs.com/)
 - **Version Control:** Git & GitHub
+
+---
 
 ## Getting Started
 To get a local copy up and running, follow these simple steps.
@@ -30,11 +42,17 @@ To get a local copy up and running, follow these simple steps.
 3.  **Open the project:**
     Open `index.html` in your web browser.
 
+---
+
 ## Contribution
-This project is for personal use, but feel free to explore the code.
+Currently, contributions are limited to the project members.
+
+---
 
 ## License
 This project is licensed under the [MIT License](LICENSE).
+
+---
 
 ##  Contact
 [S.Sanath Kumar] - [s.sanath.kumar.dev@gmail.com]
