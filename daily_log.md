@@ -20,22 +20,16 @@
 
 *  Began planning for the next phase of the project: collecting Points of Interest (POIs).
 
-### October 12, 2025
-*  Began planning for the next phase of the project: collecting Points of Interest (POIs).
+### October 11, 2025
+* Successfully acquired high-resolution, **floor-wise images** for all targeted main campus buildings (e.g., MBA/MCA Block, Library, Ayurveda Building).
   
-*  Defined the structural requirements for handling indoor (floor-wise) navigation data.
+* Confirmed that these images were obtained from **Gururaj Sir of the Civil Department**, ensuring data accuracy for internal layouts.
   
-*  Finalized that the primary POI objects in campusData will now include a floorPlans object to store interior map details.
+* The acquired floor plan imagery is a critical milestone for implementing the **internal (indoor) navigation** map layers.
   
-*  The floorPlans structure was set up to include the imageUrl and pixel mapDimensions for each floor.
+* Began planning the necessary updates to the `campusData` structure to support the new floor layers and internal mapping feature.
   
-*  Confirmed that all internal room coordinates must be recorded relative to their respective floor plan images.
-  
-*  Began updating the data structure in js/map_data.js for the first target building
-  
-*  Identified the need to write a primary JavaScript function to dynamically switch the Leaflet map's layers and bounds to display the internal floor plans.
-
-*  Began planning the necessary data structures for localized A* pathfinding within each floor (floorGraph).
+* Confirmed that the external POI coordinate data already collected aligns correctly with the main campus map's path network.
 
 
 
