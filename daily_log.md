@@ -20,7 +20,7 @@
 
 *  Began planning for the next phase of the project: collecting Points of Interest (POIs).
 
-###October 12, 2025
+### October 12, 2025
 *  Began planning for the next phase of the project: collecting Points of Interest (POIs).
   
 *  Defined the structural requirements for handling indoor (floor-wise) navigation data.
