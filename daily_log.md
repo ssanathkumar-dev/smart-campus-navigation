@@ -21,7 +21,7 @@
 *  Began planning for the next phase of the project: collecting Points of Interest (POIs).
 
 ### October 11, 2025
-* Successfully acquired high-resolution, **floor-wise images** for all targeted main campus buildings (e.g., MBA/MCA Block, Library, Ayurveda Building).
+* Successfully acquired high-resolution, **floor-wise images** for main campus buildings.
   
 * Confirmed that these images were obtained from **Gururaj Sir of the Civil Department**, ensuring data accuracy for internal layouts.
   
