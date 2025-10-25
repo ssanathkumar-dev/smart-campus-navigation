@@ -20,6 +20,31 @@
 
 *  Began planning for the next phase of the project: collecting Points of Interest (POIs).
 
+###October 12, 2025
+*  Began planning for the next phase of the project: collecting Points of Interest (POIs).
+  
+*  Defined the structural requirements for handling indoor (floor-wise) navigation data.
+  
+*  Finalized that the primary POI objects in campusData will now include a floorPlans object to store interior map details.
+  
+*  The floorPlans structure was set up to include the imageUrl and pixel mapDimensions for each floor.
+  
+*  Confirmed that all internal room coordinates must be recorded relative to their respective floor plan images.
+  
+*  Began updating the data structure in js/map_data.js for the first target building
+  
+*  Identified the need to write a primary JavaScript function to dynamically switch the Leaflet map's layers and bounds to display the internal floor plans.
+
+*  Began planning the necessary data structures for localized A* pathfinding within each floor (floorGraph).
+
+
+
+
+
+
+
+
+
 
 
 
