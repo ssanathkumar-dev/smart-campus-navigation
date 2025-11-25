@@ -20,6 +20,25 @@
 
 *  Began planning for the next phase of the project: collecting Points of Interest (POIs).
 
+### October 11, 2025
+* Successfully acquired high-resolution, **floor-wise images** for main campus buildings.
+  
+* Confirmed that these images were obtained from **Gururaj Sir of the Civil Department**, ensuring data accuracy for internal layouts.
+  
+* The acquired floor plan imagery is a critical milestone for implementing the **internal (indoor) navigation** map layers.
+  
+* Began planning the necessary updates to the `campusData` structure to support the new floor layers and internal mapping feature.
+  
+* Confirmed that the external POI coordinate data already collected aligns correctly with the main campus map's path network.
+
+
+
+
+
+
+
+
+
 
 
 
