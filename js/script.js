@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const mapWidth = 4493; 
     const mapHeight = 3178;
     const bounds = [[0, 0], [mapHeight, mapWidth]];
-    const imageUrl = 'assets/campus_layout.png';
+    const imageUrl = 'assets/map.png';
     L.imageOverlay(imageUrl, bounds).addTo(map);
 
     // ==========================================
