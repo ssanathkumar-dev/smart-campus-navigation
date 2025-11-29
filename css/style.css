@@ -1,112 +1,185 @@
+/* --- RESET & FONTS --- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
-    background-color: #f4f4f4;
-    color: #333;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden; /* Prevents scrollbars */
 }
 
-header {
-    background-color: #004d99;
-    color: white;
-    padding: 15px 20px;
-    text-align: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-}
-
-h1 {
-    margin: 0;
-    font-size: 24px;
-}
-
-h2 {
-    font-size: 18px;
-    margin-top: 0;
-    color: #004d99;
-    border-bottom: 2px solid #e0e0e0;
-    padding-bottom: 5px;
-}
-
-.main-container {
-    display: flex;
-    height: calc(100vh - 60px); 
-    overflow: hidden;
-}
-
+/* --- FULL SCREEN MAP --- */
 #map {
-    flex-grow: 1; 
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
     height: 100%;
-    border: none;
-    transition: all 0.5s ease-in-out; 
+    z-index: 1; /* Map sits at the back */
+    background-color: #ffffff; /* Matches your map image background */
 }
 
-.sidebar {
-    width: 350px; 
-    background-color: #ffffff;
-    padding: 20px;
-    box-shadow: -4px 0 10px rgba(0,0,0,0.1);
-    overflow-y: auto; 
-    transition: width 0.5s ease-in-out; 
+/* --- FLOATING SIDEBAR CARD --- */
+.sidebar-card {
+    position: absolute;
+    top: 20px;
+    right: 20px; /* Floats on the right */
+    width: 380px;
+    max-height: 90vh; /* Prevents it from being too tall */
+    overflow-y: auto; /* Allows scrolling inside sidebar if needed */
+    background: rgba(255, 255, 255, 0.95); /* Slight transparency */
+    backdrop-filter: blur(10px); /* Glass effect */
+    padding: 25px;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    z-index: 1000; /* Sits on top of map */
+    border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-/* --- Input and Button Styling --- */
+/* --- TYPOGRAPHY --- */
+h1 {
+    font-size: 1.5rem;
+    color: #1e293b;
+    margin-bottom: 20px;
+    font-weight: 700;
+    text-align: center;
+}
+
+h3 {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    color: #64748b;
+    margin-bottom: 10px;
+    letter-spacing: 0.05em;
+}
+
+hr {
+    border: 0;
+    height: 1px;
+    background: #e2e8f0;
+    margin: 20px 0;
+}
+
+/* --- INPUTS --- */
 input[type="text"] {
     width: 100%;
-    padding: 12px;
+    padding: 12px 15px;
     margin-bottom: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid #cbd5e1;
     border-radius: 8px;
-    box-sizing: border-box; 
-    transition: border-color 0.3s;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    background: #f8fafc;
 }
+
 input[type="text"]:focus {
     outline: none;
-    border-color: #007bff;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    background: white;
 }
 
-.controls button, #navigation-panel button {
-    width: 100%;
-    padding: 12px;
-    margin-top: 5px;
-    border: none;
+/* --- INFO BOX --- */
+.info-box {
+    background: #f1f5f9;
+    padding: 10px;
     border-radius: 8px;
+    color: #334155;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+    border-left: 4px solid #3b82f6;
+}
+
+/* --- BUTTONS --- */
+button {
     cursor: pointer;
-    background-color: #007bff;
+    font-weight: 600;
+    border: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+#searchButton {
+    width: 100%;
+    padding: 10px;
+    background-color: #3b82f6;
     color: white;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
+    border-radius: 8px;
+    margin-bottom: 5px;
 }
 
-.controls button:hover, #navigation-panel button:hover {
-    background-color: #0056b3;
+.button-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
 }
 
-#clearRouteButton {
-    background-color: #dc3545;
+.btn-primary {
+    flex: 2;
+    padding: 12px;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.5);
 }
 
-#clearRouteButton:hover {
-    background-color: #c82333;
+.btn-secondary {
+    flex: 1;
+    padding: 12px;
+    background: #e2e8f0;
+    color: #475569;
+    border-radius: 8px;
 }
 
-/* --- Animation Styles --- */
+.btn-primary:hover {
+    box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.5);
+    transform: translateY(-1px);
+}
+
+.btn-secondary:hover {
+    background: #cbd5e1;
+}
+
+/* --- SCROLLBAR STYLE --- */
+.sidebar-card::-webkit-scrollbar {
+    width: 6px;
+}
+.sidebar-card::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 10px;
+}
+
+/* --- MOBILE RESPONSIVENESS --- */
+@media (max-width: 768px) {
+    .sidebar-card {
+        top: auto;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        max-height: 50vh;
+        border-radius: 20px 20px 0 0;
+        padding: 20px;
+    }
+}
+
+/* --- ANIMATION --- */
 .fade-in {
-    opacity: 0;
-    transform: translateY(20px);
-    animation: fadeIn 0.8s ease-out forwards;
+    animation: fadeIn 0.5s ease-in-out;
 }
 
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
-
-.controls { animation-delay: 0.1s; }
-hr { animation-delay: 0.3s; }
-#info-panel { animation-delay: 0.5s; }
-#navigation-panel { animation-delay: 0.7s; }

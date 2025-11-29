@@ -1,64 +1,56 @@
 document.addEventListener('DOMContentLoaded', function() {
     
-    // --- Map Initialization and Setup ---
+    // ==========================================
+    // 1. MAP SETUP
+    // ==========================================
     const crs = L.CRS.Simple;
 
     const map = L.map('map', {
         crs: crs,
-        minZoom: -2,    // Allows zooming out further
-        maxZoom: 3,     // Allows zooming in closer
-        zoomDelta: 0.25 // Smooths out the zoom steps
+        minZoom: -2,    
+        maxZoom: 3,     
+        zoomDelta: 0.25 
     });
 
-    // Verified map dimensions
     const mapWidth = 4493; 
     const mapHeight = 3178;
-
     const bounds = [[0, 0], [mapHeight, mapWidth]];
-
     const imageUrl = 'assets/campus_layout.png';
     L.imageOverlay(imageUrl, bounds).addTo(map);
 
-    // --- Helper Function: Calculate Distance ---
-    // Used by the A* heuristic and for data collection
+    // ==========================================
+    // 2. HELPER FUNCTIONS
+    // ==========================================
+
+    // Calculate Distance (Euclidean)
     function calculateDistance(coordA, coordB) {
-        const dx = coordB[1] - coordA[1]; // X-difference
-        const dy = coordB[0] - coordA[0]; // Y-difference
+        const dx = coordB[1] - coordA[1]; 
+        const dy = coordB[0] - coordA[0]; 
         const distance = Math.sqrt(dx * dx + dy * dy);
         return Math.round(distance);
     }
 
-    // --- Helper Function: Add POI Markers ---
+    // Add Markers to Map
     function addPoiMarker(coords, name) {
         L.marker(coords).addTo(map)
-            .bindPopup(`<b>${name}</b>`)
-            .on('click', function(e) {
-                console.log(`Clicked on ${name} at: ${e.latlng.lat}, ${e.latlng.lng}`);
-            });
+            .bindPopup(`<b>${name}</b>`);
     }
     
-    // --- Data Loading, Centering, and Marker Display ---
+    // Load Data onto Map
     if (typeof campusData !== 'undefined' && campusData.length > 0) {
-        // Set view to fit the entire image bounds first
         map.fitBounds(bounds); 
-
-        // Then, display all markers
         campusData.forEach(building => {
             addPoiMarker(building.coordinates, building.name);
         });
     } else {
-        // Fallback: If map_data.js is empty
         map.fitBounds(bounds);
-        console.warn("map_data.js is empty or not loaded. Centering map to full image bounds.");
+        console.warn("map_data.js is empty or not loaded.");
     }
 
-    /*
-    ==================================================================
-    == A* PATHFINDING ALGORITHM
-    ==================================================================
-    */
+    // ==========================================
+    // 3. A* PATHFINDING ALGORITHM
+    // ==========================================
 
-    // [HELPER FUNCTION 1: The A* Algorithm]
     function findShortestPath(startNodeId, endNodeId) {
         let openSet = new Set([startNodeId]);
         let cameFrom = {}; 
@@ -105,21 +97,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
         }
-        return null; // No path found
+        return null; 
     }
 
-    // [HELPER FUNCTION 2: A* Heuristic]
-    // Estimates the cost from one node to the end node
     function heuristic(nodeAId, nodeBId) {
-        if (!campusGraph[nodeAId] || !campusGraph[nodeBId]) {
-            return Infinity;
-        }
+        if (!campusGraph[nodeAId] || !campusGraph[nodeBId]) return Infinity;
         const coordA = campusGraph[nodeAId].coords;
         const coordB = campusGraph[nodeBId].coords;
         return calculateDistance(coordA, coordB);
     }
 
-    // [HELPER FUNCTION 3: Path Reconstruction]
     function reconstructPath(cameFrom, current) {
         let totalPath = [current];
         while (current in cameFrom) {
@@ -129,18 +116,23 @@ document.addEventListener('DOMContentLoaded', function() {
         return totalPath; 
     }
 
-    // [HELPER FUNCTION 4: Find Node ID from Name]
-    // Finds the graph node ID (e.g., "canteen-entrance") from a POI name (e.g., "canteen")
+    // [HELPER FUNCTION 4: Find Node ID from Name (SMART SEARCH)]
+    // Allows partial names like "can" -> "canteen" or "mba" -> "MBA Block"
     function findNodeIdByName(locationName) {
         if (!locationName) return null;
+        
+        const lowerInput = locationName.toLowerCase();
 
+        // 1. Try to find a match in campusData
+        // We use 'includes' instead of '===' to allow partial matches
         const poi = campusData.find(item => 
-            item.name.toLowerCase() === locationName.toLowerCase()
+            item.name.toLowerCase().includes(lowerInput)
         );
 
         if (!poi) return null; 
 
-        // Handle all 22 special cases from your data
+        // 2. Map the found POI Name to the Graph ID
+        // (We use the full name from the found POI to ensure accuracy)
         if (poi.name === "Girls Hostel") return "hostel-g-entrance";
         if (poi.name === "GYM") return "gym-entrance";
         if (poi.name === "MITM School Area") return "school-area-entrance";
@@ -164,20 +156,20 @@ document.addEventListener('DOMContentLoaded', function() {
         if (poi.name === "MITM Corns") return "mitm-corns";
         if (poi.name === "canteen") return "canteen-entrance";
         if (poi.name === "Maths Department") return "maths-dept-entrance";
+        if (poi.name === "Main Building") return "main-building-entrance";
 
-        // Fallback just in case
+        // Fallback generator
         const nodeId = poi.name.toLowerCase().replace(/ /g, '-') + "-entrance";
-        if (campusGraph[nodeId]) {
-            return nodeId;
-        }
-
-        console.error(`Could not find matching graph node for: ${locationName}`);
+        if (campusGraph[nodeId]) return nodeId;
+        
         return null;
     }
 
-    // --- Search and Route Finding Logic ---
+    // ==========================================
+    // 4. ROUTE UI LOGIC
+    // ==========================================
 
-    let currentRoutePolyline = null; // Stores the route line so we can clear it
+    let currentRoutePolyline = null; 
     const findRouteBtn = document.getElementById('getDirectionsButton'); 
 
     findRouteBtn.addEventListener('click', function() {
@@ -185,7 +177,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const destName = document.getElementById('destination').value;
         const instructionsDiv = document.getElementById('route-instructions');
 
-        // Clear any old route from the map
         if (currentRoutePolyline) {
             map.removeLayer(currentRoutePolyline);
         }
@@ -195,21 +186,14 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // 1. Find the Node IDs from the names
         const startNodeId = findNodeIdByName(startName);
         const endNodeId = findNodeIdByName(destName);
 
-        if (!startNodeId) {
-            instructionsDiv.innerHTML = `<h2>Error</h2><p>Start location '${startName}' not found.</p>`;
-            return;
-        }
-        
-        if (!endNodeId) {
-            instructionsDiv.innerHTML = `<h2>Error</h2><p>Destination '${destName}' not found.</p>`;
+        if (!startNodeId || !endNodeId) {
+            instructionsDiv.innerHTML = `<h2>Error</h2><p>One of the locations was not found.</p>`;
             return;
         }
 
-        // 2. RUN THE A* ALGORITHM!
         const pathNodeIds = findShortestPath(startNodeId, endNodeId);
 
         if (!pathNodeIds) {
@@ -217,58 +201,72 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // 3. Convert Node IDs back to Coordinates
-        const pathCoords = pathNodeIds.map(nodeId => {
-            return campusGraph[nodeId].coords; 
-        });
+        const pathCoords = pathNodeIds.map(nodeId => campusGraph[nodeId].coords);
 
-        // 4. DRAW THE ROUTE ON THE MAP
         currentRoutePolyline = L.polyline(pathCoords, { 
-            color: '#ff0000', // Red
-            weight: 5,
-            opacity: 0.8
+            color: '#ff0000', 
+            weight: 5, 
+            opacity: 0.8 
         }).addTo(map);
 
-        // Zoom the map to fit the new route
         map.fitBounds(currentRoutePolyline.getBounds());
-
-        // 5. Display success message
         instructionsDiv.innerHTML = `<h2>Success!</h2><p>Route found from ${startName} to ${destName}.</p>`;
     });
 
     // ==========================================
-    // DEBUG: VISUALIZE THE GRAPH CONNECTIONS
+    // 5. SEARCH & CLEAR CONTROLS
     // ==========================================
-    // This draws blue lines between all connected nodes so you can see gaps.
+
+    const clearBtn = document.getElementById('clearRouteButton');
     
-    const debugLayer = L.layerGroup().addTo(map);
-
-    // Loop through every node in the graph
-    Object.keys(campusGraph).forEach(nodeId => {
-        const node = campusGraph[nodeId];
-        
-        // Draw a small circle for the node
-        L.circleMarker(node.coords, { radius: 5, color: 'blue' })
-            .bindPopup(nodeId) // Click a dot to see its ID!
-            .addTo(debugLayer);
-
-        // Draw lines to neighbors
-        Object.keys(node.neighbors).forEach(neighborId => {
-            if (campusGraph[neighborId]) {
-                const neighbor = campusGraph[neighborId];
-                L.polyline([node.coords, neighbor.coords], { color: 'blue', weight: 1, opacity: 0.5 })
-                    .addTo(debugLayer);
-            }
-        });
+    clearBtn.addEventListener('click', function() {
+        if (currentRoutePolyline) {
+            map.removeLayer(currentRoutePolyline);
+            currentRoutePolyline = null;
+        }
+        document.getElementById('start-location').value = '';
+        document.getElementById('destination').value = '';
+        document.getElementById('route-instructions').innerHTML = '';
+        map.fitBounds(bounds);
     });
 
+    const searchInput = document.getElementById('searchInput');
+    const searchBtn = document.getElementById('searchButton');
 
-    // --- Coordinate Helper (for data collection) ---
+    function performSearch() {
+        const query = searchInput.value;
+        if (!query) return;
+
+        const target = campusData.find(poi => 
+            poi.name.toLowerCase().includes(query.toLowerCase())
+        );
+
+        if (target) {
+            map.setView(target.coordinates, 2); 
+            map.eachLayer(layer => {
+                if (layer instanceof L.Marker && layer.getPopup()) {
+                    if (layer.getPopup().getContent().includes(target.name)) {
+                        layer.openPopup();
+                    }
+                }
+            });
+            document.getElementById('location-name').innerText = target.name;
+            document.getElementById('location-description').innerText = target.description || "No description available.";
+        } else {
+            alert("Location not found!");
+        }
+    }
+
+    searchBtn.addEventListener('click', performSearch);
+    searchInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') performSearch();
+    });
+
+    // --- Dev Helper: Click to get coordinates (Optional: Keep for future updates) ---
     map.on('click', function(e) {
         const y = Math.round(e.latlng.lat);
         const x = Math.round(e.latlng.lng);
         console.log(`Map Click Coordinates (y, x): ${y}, ${x}`);
     });
 
-}); // End of DOMContentLoaded
-
+});

@@ -1,253 +1,243 @@
+// ==========================================
+// 1. CAMPUS DATA (Destinations)
+// ==========================================
 const campusData = [
-    {
-        name: "Girls Hostel",
-        description: "On-campus residential facility for female students.",
-        coordinates: [2286, 2938]
-    },
-    {
-        name: "GYM",
-        description: "Facilities for various sports and physical activities.",
-        coordinates: [2536, 2712] 
-    },
-    {
-        name: "MITM School Area",
-        description: "The main block for the campus school, housing administrative offices and classrooms.",
-        coordinates: [2202, 2700]
-    },
-    {
-        name: "MITM School Play Area",
-        description: "Dedicated outdoor play and recreation space for school students.",
-        coordinates: [2166, 2622]
-    },
-    {
-        name: "Ayurveda Building",
-        description: "Dedicated block for the study and practice of Ayurvedic medicine.",
-        coordinates: [2010, 2246]
-    },
-    {
-        name: "BCA BBA Block",
-        description: "Academic block for the Bachelor of Computer Applications and Bachelor of Business Administration programs.",
-        coordinates: [1498, 2432]
-    },
-    {
-        name: "Auditorium",
-        description: "The hall for college events and ceremonies.",
-        coordinates: [1603, 2097] 
-    },
-    {
-        name: "MBA, MCA Block",
-        description: "Academic and administrative block for the Masters of Business Administration and Masters of Computer Applications programs.",
-        coordinates: [1910, 1956]
-    },
-    {
-        name: "Boys Hostel Block",
-        description: "On-campus residential facility for male students.",
-        coordinates: [1554, 1858] 
-    },
-    {
-        name: "Parking Lot A",
-        description: "Main parking area for staff.",
-        coordinates: [2118, 1754] 
-    },
-    {
-        name: "Basketball Ground",
-        description: "Outdoor court for basketball practice and matches.",
-        coordinates: [2423, 1620]
-    },
-    {
-        name: "College Library",
-        description: "The main library building, open 24/7.",
-        coordinates: [1942, 1401] 
-    },
-    {
-        name: "Maths Department",
-        description: "Departmental offices and faculty rooms for Mathematics.",
-        coordinates: [1832, 1138]
-    },
-    {
-        name: "MITM Juice Stall",
-        description: "Stall offering fresh juices and cold beverages.",
-        coordinates: [1690, 1534]
-    },
-    {
-        name: "MITM Store",
-        description: "A general store on campus for stationary, snacks, and basic necessities.",
-        coordinates: [1694, 1579]
-    },
-    {
-        name: "MITM Bakery",
-        description: "Stall selling baked goods, pastries, and quick snacks.",
-        coordinates: [1693, 1622]
-    },
-    {
-        name: "MITM Chats",
-        description: "Stall serving popular Indian street food and savoury snacks.",
-        coordinates: [1695, 1654]
-    },
-    {
-        name: "MITM Ice Cream",
-        description: "Stall selling various ice-cream flavours and frozen desserts.",
-        coordinates: [1696, 1679]
-    },
-    {
-        name: "Main Auditorium",
-        description: "The main hall for college events and ceremonies.",
-        coordinates: [1643, 1683] 
-    },
-    {
-        name: "MITM Rolls",
-        description: "Stall specializing in various wraps and rolls, a popular lunch/snack option.",
-        coordinates: [1584, 1643]
-    },
-    {
-        name: "MITM Fruits",
-        description: "Stall offering fresh fruit cuts and fruit juices.",
-        coordinates: [1575, 1616]
-    },
-    {
-        name: "MITM Corns",
-        description: "Stall selling corn-based snacks, like boiled or roasted corn on the cob.",
-        coordinates: [1565, 1574]
-    },
-    {
-        name: "canteen",
-        description: "The main dining area serving meals throughout the day.",
-        coordinates: [1483, 1519]
-    }
+    { name: "Girls Hostel", coordinates: [2286, 2938] },
+    { name: "GYM", coordinates: [2536, 2712] },
+    { name: "MITM School Area", coordinates: [2202, 2700] },
+    { name: "MITM School Play Area", coordinates: [2166, 2622] },
+    { name: "Ayurveda Building", coordinates: [2010, 2246] },
+    { name: "BCA BBA Block", coordinates: [1498, 2432] },
+    { name: "Auditorium", coordinates: [1603, 2097] },
+    { name: "MBA, MCA Block", coordinates: [1910, 1956] },
+    { name: "Boys Hostel Block", coordinates: [1554, 1858] }, 
+    { name: "Parking Lot A", coordinates: [2118, 1754] },
+    { name: "Basketball Ground", coordinates: [2423, 1620] },
+    { name: "College Library", coordinates: [1942, 1401] },
+    { name: "Maths Department", coordinates: [1832, 1138] },
+    { name: "Main Building", coordinates: [1616, 872] },
+    { name: "MITM Juice Stall", coordinates: [1690, 1534] },
+    { name: "MITM Store", coordinates: [1694, 1579] },
+    { name: "MITM Bakery", coordinates: [1693, 1622] },
+    { name: "MITM Chats", coordinates: [1695, 1654] },
+    { name: "MITM Ice Cream", coordinates: [1696, 1679] },
+    { name: "Main Auditorium", coordinates: [1643, 1683] },
+    { name: "MITM Rolls", coordinates: [1584, 1643] },
+    { name: "MITM Fruits", coordinates: [1575, 1616] },
+    { name: "MITM Corns", coordinates: [1565, 1574] },
+    { name: "canteen", coordinates: [1483, 1519] }
 ];
 
+// ==========================================
+// 2. CAMPUS GRAPH (The Road Network)
+// ==========================================
 const campusGraph = {
-    // ------------------------------------------
-    // 1. POI Entrances (FIXED: Auditoriums separated)
-    // ------------------------------------------
-    "hostel-g-entrance": { coords: [2286, 2938], neighbors: { "node-01": 189 } },
-    "gym-entrance": { coords: [2536, 2712], neighbors: { "node-01": 239 } },
-    "school-area-entrance": { coords: [2202, 2700], neighbors: { "node-01": 110 } },
-    "school-play-entrance": { coords: [2166, 2622], neighbors: { "node-01": 185 } },
-    "ayurveda-entrance": { coords: [2010, 2246], neighbors: { "node-02": 581 } },
-    "bca-bba-entrance": { coords: [1498, 2432], neighbors: { "node-03": 863 } },
-    
-    // FIX 1: Auditorium only connects to Node 03 (Dead end)
-    "auditorium-entrance": { coords: [1603, 2097], neighbors: { "node-03": 559 } }, 
-    
-    "mba-mca-entrance": { coords: [1910, 1956], neighbors: { "node-03": 885 } },
-    "hostel-b-entrance": { coords: [1554, 1858], neighbors: { "node-04": 1163 } },
-    "parking-a-entrance": { coords: [2118, 1754], neighbors: { "node-04": 1012 } },
-    "basketball-entrance": { coords: [2423, 1620], neighbors: { "node-05": 555 } },
-    "library-entrance": { coords: [1942, 1401], neighbors: { "node-05": 86 } },
-    "maths-dept-entrance": { coords: [1832, 1138], neighbors: { "node-05": 342 } },
-    "juice-stall": { coords: [1690, 1534], neighbors: { "node-06": 64 } },
-    "mitm-store": { coords: [1694, 1579], neighbors: { "node-06": 89 } },
-    "mitm-bakery": { coords: [1693, 1622], neighbors: { "node-06": 122 } },
-    "mitm-chats": { coords: [1695, 1654], neighbors: { "node-06": 149 } },
-    "mitm-icecream": { coords: [1696, 1679], neighbors: { "node-06": 175 } },
-    
-    // FIX 2: Main Auditorium connects to Node 06 (Food Court)
-    "auditorium-main": { coords: [1643, 1683], neighbors: { "node-06": 166 } },
-    
-    "mitm-rolls": { coords: [1584, 1643], neighbors: { "node-06": 132 } },
-    "mitm-fruits": { coords: [1575, 1616], neighbors: { "node-06": 111 } },
-    "mitm-corns": { coords: [1565, 1574], neighbors: { "node-06": 82 } },
-    "canteen-entrance": { coords: [1483, 1519], neighbors: { "node-07": 58 } },
 
-   // ------------------------------------------
-    // 2. Path Intersections (REPAIRED & VERIFIED)
-    // ------------------------------------------
-    
-    "node-01": { 
-        coords: [2325, 2716], 
-        neighbors: { 
-            "hostel-g-entrance": 189, "gym-entrance": 239, "school-area-entrance": 110,
-            "school-play-entrance": 185, 
-            "node-13": 172 // Connects to intermediate node 13
-        } 
-    },
-    
-    // New Intermediate Node (Near School/Hostel Curve)
-    "node-13": { 
-        coords: [2280, 2550], 
+    // --- MAIN ROAD SPINE (The Backbone) ---
+
+    "road-node-01": {
+        coords: [2400, 2898],
         neighbors: {
-            "node-01": 172, // Back to Node 01
-            "node-08": 102  // Forward to Node 08
+            "hostel-g-entrance": 130, 
+            "node-school-path": 260 
         }
     },
-
-    "node-08": {
-        coords: [2247, 2478], 
+    
+    // School Path Node (Intermediate)
+    "node-school-path": {
+        coords: [2308, 2655], 
         neighbors: {
-            "node-13": 102, // Back to Node 13
-            "node-02": 3    // Forward to Node 02
+            "road-node-01": 260,        
+            "road-node-stadium": 101,   
+            "school-area-entrance": 115 
         }
     },
 
-    "node-02": { 
-        coords: [2250, 2476], 
-        neighbors: { 
-            "node-08": 3, "ayurveda-entrance": 581, 
-            "node-09": 446 
-        } 
-    },
-
-    "node-09": {
-        coords: [1821, 2609], 
+    "road-node-stadium": {
+        coords: [2273, 2560], 
         neighbors: {
-            "node-02": 446, 
-            "node-03": 4
+            "node-school-path": 101, 
+            "road-node-02": 88,  
+            "node-stadium-path": 191,
+            "school-play-entrance": 124 
         }
     },
 
-    "node-03": { 
-        coords: [1824, 2606], 
-        neighbors: { 
-            "node-09": 4, "bca-bba-entrance": 863, 
-            "auditorium-entrance": 559, 
-            "mba-mca-entrance": 885, 
-            "node-14": 657 // Connects to intermediate node 14
-        } 
-    },
-
-    // New Intermediate Node (Near Parking Lot Curve)
-    "node-14": {
-        coords: [1800, 1950], 
-        neighbors: { 
-            "node-03": 657, // Back to Node 03
-            "node-04": 267  // Forward to Node 04
+    "road-node-02": {
+        coords: [2244, 2477],
+        neighbors: {
+            "road-node-stadium": 88,  
+            "road-node-03": 296,      
+            "node-bca-hub": 484 
         }
     },
 
-    "node-04": { 
-        coords: [2066, 1976], 
-        neighbors: { 
-            "node-14": 267, // Back to Node 14
-            "hostel-b-entrance": 1163, "basketball-entrance": 1137,
-            "parking-a-entrance": 1012, "node-05": 532
-        } 
+    "road-node-03": {
+        coords: [2150, 2196],
+        neighbors: {
+            "road-node-02": 296,      
+            "road-node-04": 285,      
+            "ayurveda-entrance": 150  
+        }
     },
 
-    "node-05": { 
-        coords: [1887, 1476], 
-        neighbors: { 
-            "node-04": 532, "library-entrance": 86, 
-            "maths-dept-entrance": 342, "node-06": 263
-        } 
+    "road-node-04": {
+        coords: [2050, 1929],
+        neighbors: {
+            "road-node-03": 285,      
+            "road-node-05": 118,      
+            "mba-mca-entrance": 142,
+            "node-basketball-turn": 221
+        }
     },
 
-    "node-06": { 
-        coords: [1628, 1517], 
-        neighbors: { 
-            "node-05": 263, "juice-stall": 64, "mitm-store": 89, "mitm-bakery": 122, 
-            "mitm-chats": 149, "mitm-icecream": 175, "mitm-rolls": 132, 
-            "mitm-fruits": 111, "mitm-corns": 82, 
-            "node-07": 87,
-            "auditorium-main": 166
-        } 
+    "road-node-05": {
+        coords: [2014, 1817],
+        neighbors: {
+            "road-node-04": 118,      
+            "road-node-05-turn": 364, // Forward to Turn
+            "parking-a-entrance": 121,
+            "node-hostel-path-1": 144
+        }
     },
 
-    "node-07": { 
+    // The Intermediate Turn (Connecting 05 to 06)
+    "road-node-05-turn": {
+        coords: [1889, 1475], 
+        neighbors: {
+            "road-node-05": 364, // Back to Parking
+            "road-node-06": 273, // Forward to Food Court
+            "library-entrance": 91,
+            "node-maths-path-1": 237
+        }
+    },
+
+    "road-node-06": {
+        coords: [1619, 1518], 
+        neighbors: {
+            "road-node-05-turn": 273, // Back to Turn
+            "road-node-07": 78,       // Forward to Canteen
+            "juice-stall": 73, "mitm-store": 97, "mitm-bakery": 120, 
+            "mitm-chats": 149, "mitm-icecream": 175, "auditorium-main": 167, 
+            "mitm-rolls": 130, "mitm-fruits": 100, "mitm-corns": 80
+        }
+    },
+
+    "road-node-07": {
         coords: [1541, 1522], 
-        neighbors: { 
-            "node-06": 87, "canteen-entrance": 58
-        } 
-    }
+        neighbors: {
+            "road-node-06": 78, 
+            "canteen-entrance": 58
+        }
+    },
 
-}
+    // --- SIDE PATHS & SPECIAL WALKWAYS ---
+
+    // 1. Gym Path
+    "node-stadium-path": {
+        coords: [2463, 2542], 
+        neighbors: {
+            "gym-entrance": 185,      
+            "road-node-stadium": 191  
+        }
+    },
+
+    // 2. BCA/Auditorium Hub
+    "node-bca-hub": {
+        coords: [1794, 2656], 
+        neighbors: {
+            "road-node-02": 484,      
+            "road-node-bca": 216,     
+            "road-node-auditorium": 485 
+        }
+    },
+    "road-node-bca": {
+        coords: [1713, 2456], 
+        neighbors: { "node-bca-hub": 216, "bca-bba-entrance": 216 }
+    },
+    "road-node-auditorium": {
+        coords: [1646, 2194], 
+        neighbors: { "node-bca-hub": 485, "auditorium-entrance": 106 }
+    },
+
+    // 3. Basketball Path
+    "node-basketball-turn": {
+        coords: [2253, 1841], 
+        neighbors: { "road-node-04": 221, "node-basketball-path": 122 }
+    },
+    "node-basketball-path": {
+        coords: [2362, 1787], 
+        neighbors: { "node-basketball-turn": 122, "basketball-entrance": 178 }
+    },
+
+    // 4. Boys Hostel Path
+    "node-hostel-path-1": {
+        coords: [1935, 1612],
+        neighbors: { "road-node-05": 144, "node-hostel-path-2": 161 }
+    },
+    "node-hostel-path-2": {
+        coords: [1782, 1662],
+        neighbors: { "node-hostel-path-1": 161, "node-hostel-path-3": 125 }
+    },
+    "node-hostel-path-3": {
+        coords: [1759, 1785],
+        neighbors: { "node-hostel-path-2": 125, "node-hostel-path-4": 175 }
+    },
+    "node-hostel-path-4": {
+        coords: [1584, 1785],
+        neighbors: { "node-hostel-path-3": 175, "hostel-b-entrance": 79 }
+    },
+
+    // 5. Maths Path
+    "node-maths-path-1": {
+        coords: [1768, 1271],
+        neighbors: { "road-node-05-turn": 237, "node-maths-path-2": 82 }
+    },
+    "node-maths-path-2": {
+        coords: [1748, 1192],
+        neighbors: { "node-maths-path-1": 82, "node-maths-path-3": 93, "node-main-building-turn": 275 }
+    },
+    "node-maths-path-3": {
+        coords: [1790, 1109],
+        neighbors: { "node-maths-path-2": 93, "maths-dept-entrance": 51 }
+    },
+
+    // 6. Main Building Path
+    "node-main-building-turn": {
+        coords: [1487, 1104], 
+        neighbors: { "node-maths-path-2": 275, "main-building-entrance": 265 }
+    },
+
+    // --- POI ENTRANCE NODES ---
+    
+    "hostel-g-entrance": { coords: [2286, 2938], neighbors: { "road-node-01": 130 } },
+    "gym-entrance": { coords: [2536, 2712], neighbors: { "node-stadium-path": 185 } },
+    "school-area-entrance": { coords: [2202, 2700], neighbors: { "node-school-path": 115 } },
+    "school-play-entrance": { coords: [2166, 2622], neighbors: { "road-node-stadium": 124 } },
+    "ayurveda-entrance": { coords: [2010, 2246], neighbors: { "road-node-03": 150 } },
+    "mba-mca-entrance": { coords: [1910, 1956], neighbors: { "road-node-04": 142 } },
+    
+    "bca-bba-entrance": { coords: [1498, 2432], neighbors: { "road-node-bca": 216 } },
+    "auditorium-entrance": { coords: [1603, 2097], neighbors: { "road-node-auditorium": 106 } },
+
+    "hostel-b-entrance": { coords: [1554, 1858], neighbors: { "node-hostel-path-4": 79 } },
+    "parking-a-entrance": { coords: [2118, 1754], neighbors: { "road-node-05": 121 } },
+    "basketball-entrance": { coords: [2423, 1620], neighbors: { "node-basketball-path": 178 } },
+    
+    "library-entrance": { coords: [1942, 1401], neighbors: { "road-node-05-turn": 91 } },
+    "maths-dept-entrance": { coords: [1832, 1138], neighbors: { "node-maths-path-3": 51 } },
+    "main-building-entrance": { coords: [1616, 872], neighbors: { "node-main-building-turn": 265 } },
+
+    "canteen-entrance": { coords: [1483, 1519], neighbors: { "road-node-07": 58 } },
+    
+    // Food Court Stalls (Approximated)
+    "juice-stall": { coords: [1690, 1534], neighbors: { "road-node-06": 73 } },
+    "mitm-store": { coords: [1694, 1579], neighbors: { "road-node-06": 97 } },
+    "mitm-bakery": { coords: [1693, 1622], neighbors: { "road-node-06": 120 } },
+    "mitm-chats": { coords: [1695, 1654], neighbors: { "road-node-06": 149 } },
+    "mitm-icecream": { coords: [1696, 1679], neighbors: { "road-node-06": 175 } },
+    "auditorium-main": { coords: [1643, 1683], neighbors: { "road-node-06": 167 } },
+    "mitm-rolls": { coords: [1584, 1643], neighbors: { "road-node-06": 130 } },
+    "mitm-fruits": { coords: [1575, 1616], neighbors: { "road-node-06": 100 } },
+    "mitm-corns": { coords: [1565, 1574], neighbors: { "road-node-06": 80 } }
+};
