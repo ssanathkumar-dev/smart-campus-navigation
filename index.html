@@ -3,56 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Campus Navigation System</title>
-    
-    <link rel="stylesheet" href="css/style.css">
-
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-        crossorigin=""/>
+    <title>Welcome - Smart Campus Helper</title>
+    <link rel="stylesheet" href="css/start_style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <div id="map"></div>
-
-    <div class="sidebar-card fade-in">
-        
-        <header>
-            <h1>Campus Navigator</h1>
-        </header>
-
-        <div class="control-group">
-            <input type="text" id="searchInput" placeholder="Search for a location...">
-            <button id="searchButton">Search</button>
-        </div>
-        
-        <hr>
-
-        <div id="info-panel">
-            <h3>Location Details</h3>
-            <div id="location-name" class="info-box">Select a building on the map.</div>
-            <div id="location-description"></div>
-        </div>
-
-        <hr>
-
-        <div id="navigation-panel">
-            <h3>Route Planner</h3>
-            <div class="route-inputs">
-                <input type="text" id="start-location" placeholder="Start location">
-                <input type="text" id="destination" placeholder="End location">
-            </div>
-            <div class="button-group">
-                <button id="getDirectionsButton" class="btn-primary">Get Directions</button>
-                <button id="clearRouteButton" class="btn-secondary">Clear Route</button>
-            </div>
-            <div id="route-instructions"></div>
-        </div>
+    <div class="area">
+        <ul class="circles">
+            <li></li><li></li><li></li><li></li><li></li>
+            <li></li><li></li><li></li><li></li><li></li>
+        </ul>
     </div>
-    
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-    <script src="js/map_data.js"></script> 
-    <script src="js/script.js"></script> 
+
+    <div class="container">
+        <div class="icon-wrapper fade-in-1">
+            <div class="pin"></div>
+            <div class="pulse"></div>
+        </div>
+        
+        <h1 class="fade-in-2">Smart Campus Helper</h1>
+        <p class="fade-in-3">Navigate complex routes, find classrooms, and explore the campus with precision.</p>
+        
+        <a href="map.html" class="btn-start fade-in-4">
+            Start Navigation <span class="arrow">→</span>
+        </a>
+    </div>
 
 </body>
 </html>
