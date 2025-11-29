@@ -261,7 +261,35 @@ document.addEventListener('DOMContentLoaded', function() {
     searchInput.addEventListener('keypress', function(e) {
         if (e.key === 'Enter') performSearch();
     });
+    const sidebar = document.querySelector('.sidebar-card');
+    const toggleHandle = document.getElementById('mobile-toggle-handle');
+    
+    // Function to open sidebar
+    function openSidebar() {
+        sidebar.classList.add('open');
+    }
 
+    // Function to toggle (open/close)
+    function toggleSidebar() {
+        sidebar.classList.toggle('open');
+    }
+
+    // 1. Clicking the Handle toggles it
+    if(toggleHandle) {
+        toggleHandle.addEventListener('click', toggleSidebar);
+    }
+
+    // 2. Typing in search automatically opens it
+    document.getElementById('searchInput').addEventListener('focus', openSidebar);
+    
+    // 3. Typing in route planner opens it
+    document.getElementById('start-location').addEventListener('focus', openSidebar);
+    document.getElementById('destination').addEventListener('focus', openSidebar);
+
+    // 4. Searching or Getting Directions keeps it open
+    searchBtn.addEventListener('click', openSidebar);
+    findRouteBtn.addEventListener('click', openSidebar);
+    
     // --- Dev Helper: Click to get coordinates (Optional: Keep for future updates) ---
     map.on('click', function(e) {
         const y = Math.round(e.latlng.lat);
