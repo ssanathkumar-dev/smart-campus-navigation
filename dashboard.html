@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plan Route - Smart Campus</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- MAIN LAYOUT & BACKGROUND IMAGE --- */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            height: 100vh; /* Full screen height */
+            width: 100%;
+            display: flex;
+            align-items: center; /* Vertical Center */
+            justify-content: center; /* Horizontal Center */
+            overflow: hidden; /* No scrolling on main page */
+            
+            /* TODO: REPLACE THE URL BELOW WITH A PHOTO OF YOUR COLLEGE! 
+               You can put a file named 'college_bg.jpg' in your assets folder 
+               and change the url to: url('assets/college_bg.jpg')
+            */
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), /* Dark overlay for readability */
+                        url('assets/college_bg.jpg') no-repeat center center;
+            background-size: cover; /* Ensure image covers whole screen */
+        }
+
+        /* --- ULTRA-MODERN GLASS CARD --- */
+        .dashboard-card {
+            /* Lighter, more transparent glass */
+            background: rgba(255, 255, 255, 0.85);
+            /* Stronger blur for depth */
+            backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            /* Clean white border */
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            
+            padding: 45px 40px; /* More internal spacing */
+            border-radius: 24px;
+            /* Soft, deep shadow */
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+            width: 90%;
+            max-width: 420px; /* Slightly narrower for a cleaner look */
+            text-align: center;
+            
+            /* Entrance Animation */
+            animation: slideUpFade 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            opacity: 0; transform: translateY(40px);
+        }
+
+        @keyframes slideUpFade {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- TYPOGRAPHY & ALIGNMENT --- */
+        .map-icon {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            display: inline-block;
+            /* Subtle floating animation */
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+
+        h2 {
+            color: #1e293b;
+            margin: 0 0 8px 0;
+            font-weight: 700;
+            font-size: 1.75rem;
+        }
+        
+        p.subtitle {
+            color: #64748b;
+            font-size: 0.95rem;
+            margin: 0 0 35px 0; /* Consistent spacing below subtitle */
+            font-weight: 500;
+        }
+
+        /* --- INPUT FIELDS (Perfected Alignment) --- */
+        .input-group {
+            margin-bottom: 25px; /* More breathing room between inputs */
+            text-align: left; /* Ensures labels align left */
+            width: 100%;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #334155;
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding-left: 4px; /* Slight align with input curve */
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 16px 20px; /* Larger, comfortable padding */
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            font-size: 1rem;
+            background: #f8fafc;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            box-sizing: border-box; /* CRITICAL for alignment */
+        }
+
+        input[type="text"]:focus {
+            border-color: #3b82f6;
+            background: white;
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+        }
+
+        /* --- MAIN BUTTON --- */
+        .btn-go {
+            width: 100%;
+            padding: 18px; /* Taller, more substantial button */
+            background: linear-gradient(135deg, #2563eb, #3b82f6);
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px -5px rgba(37, 99, 235, 0.4);
+        }
+
+        .btn-go:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px -5px rgba(37, 99, 235, 0.5);
+        }
+
+        .btn-go:active { transform: scale(0.98); }
+
+        /* --- BACK LINK --- */
+        .btn-back {
+            display: inline-block;
+            margin-top: 30px;
+            color: #64748b;
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .btn-back:hover { color: #2563eb; }
+
+        /* Error Shake Animation */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-card" id="mainCard">
+        <div class="map-icon">🏫</div> <h2>Plan Your Journey</h2>
+        <p class="subtitle">Navigate the campus with ease.</p>
+        
+        <div class="input-group">
+            <label for="startInput">Start Location</label>
+            <input type="text" id="startInput" placeholder="e.g. Main Gate" autocomplete="off">
+        </div>
+
+        <div class="input-group">
+            <label for="endInput">Destination</label>
+            <input type="text" id="endInput" placeholder="e.g. Library" autocomplete="off">
+        </div>
+
+        <button onclick="goToMap()" class="btn-go">Find Route Today</button>
+        
+        <br>
+        <a href="index.html" class="btn-back">← Back to Welcome Screen</a>
+    </div>
+
+    <script>
+        function goToMap() {
+            const start = document.getElementById('startInput').value;
+            const end = document.getElementById('endInput').value;
+            const card = document.getElementById('mainCard');
+
+            if(!start || !end) {
+                // Trigger shake animation
+                card.style.animation = 'none';
+                card.offsetHeight; /* trigger reflow */
+                card.style.animation = 'shake 0.4s ease-in-out';
+                
+                // Optional: focus the empty field
+                if(!start) document.getElementById('startInput').focus();
+                else if(!end) document.getElementById('endInput').focus();
+                return;
+            }
+
+            // Smooth transition out before redirect (Optional polish)
+            card.style.transition = 'all 0.5s ease';
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(-30px)';
+
+            setTimeout(() => {
+                window.location.href = `map.html?start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`;
+            }, 400);
+        }
+    </script>
+
+</body>
+</html> 

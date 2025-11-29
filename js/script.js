@@ -15,14 +15,19 @@ document.addEventListener('DOMContentLoaded', function() {
     const mapWidth = 4493; 
     const mapHeight = 3178;
     const bounds = [[0, 0], [mapHeight, mapWidth]];
-    const imageUrl = 'assets/map.png';
-    L.imageOverlay(imageUrl, bounds).addTo(map);
+    
+    // Outdoor Map Image
+    // NOTE: We keep a reference to this layer so we can remove it when entering a building
+    let currentImageLayer = L.imageOverlay('assets/map.png', bounds).addTo(map);
+
+    // Initialize Layer Groups
+    let routeLayerGroup = L.layerGroup().addTo(map);
+    let poiLayerGroup = L.layerGroup().addTo(map);
 
     // ==========================================
     // 2. HELPER FUNCTIONS
     // ==========================================
 
-    // Calculate Distance (Euclidean)
     function calculateDistance(coordA, coordB) {
         const dx = coordB[1] - coordA[1]; 
         const dy = coordB[0] - coordA[0]; 
@@ -30,17 +35,25 @@ document.addEventListener('DOMContentLoaded', function() {
         return Math.round(distance);
     }
 
-    // Add Markers to Map
-    function addPoiMarker(coords, name) {
-        L.marker(coords).addTo(map)
-            .bindPopup(`<b>${name}</b>`);
+    // UPDATED: Now accepts the whole building object to check for indoor maps
+    function addPoiMarker(building) {
+        const marker = L.marker(building.coordinates).addTo(poiLayerGroup);
+        
+        let popupContent = `<b>${building.name}</b>`;
+        
+        // If this building has an indoor map defined in map_data.js
+        if (building.indoorMap) {
+            popupContent += `<br><br><button onclick="window.enterBuilding('${building.name}')" style="width:100%; padding:8px; background:#2563eb; color:white; border:none; border-radius:4px; cursor:pointer; font-weight:bold;">View Inside ⤵</button>`;
+        }
+
+        marker.bindPopup(popupContent);
     }
     
-    // Load Data onto Map
+    // UPDATED: Loop passes the whole object
     if (typeof campusData !== 'undefined' && campusData.length > 0) {
         map.fitBounds(bounds); 
         campusData.forEach(building => {
-            addPoiMarker(building.coordinates, building.name);
+            addPoiMarker(building); 
         });
     } else {
         map.fitBounds(bounds);
@@ -81,18 +94,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
             openSet.delete(current);
 
-            let neighbors = campusGraph[current].neighbors;
-            for (let neighborId in neighbors) {
-                let distance = neighbors[neighborId];
-                let tentativeGScore = gScore[current] + distance;
+            if (campusGraph[current]) {
+                let neighbors = campusGraph[current].neighbors;
+                for (let neighborId in neighbors) {
+                    let distance = neighbors[neighborId];
+                    let tentativeGScore = gScore[current] + distance;
 
-                if (tentativeGScore < gScore[neighborId]) {
-                    cameFrom[neighborId] = current;
-                    gScore[neighborId] = tentativeGScore;
-                    fScore[neighborId] = gScore[neighborId] + heuristic(neighborId, endNodeId);
-                    
-                    if (!openSet.has(neighborId)) {
-                        openSet.add(neighborId);
+                    if (tentativeGScore < gScore[neighborId]) {
+                        cameFrom[neighborId] = current;
+                        gScore[neighborId] = tentativeGScore;
+                        fScore[neighborId] = gScore[neighborId] + heuristic(neighborId, endNodeId);
+                        
+                        if (!openSet.has(neighborId)) {
+                            openSet.add(neighborId);
+                        }
                     }
                 }
             }
@@ -116,23 +131,16 @@ document.addEventListener('DOMContentLoaded', function() {
         return totalPath; 
     }
 
-    // [HELPER FUNCTION 4: Find Node ID from Name (SMART SEARCH)]
-    // Allows partial names like "can" -> "canteen" or "mba" -> "MBA Block"
     function findNodeIdByName(locationName) {
         if (!locationName) return null;
-        
         const lowerInput = locationName.toLowerCase();
-
-        // 1. Try to find a match in campusData
-        // We use 'includes' instead of '===' to allow partial matches
         const poi = campusData.find(item => 
             item.name.toLowerCase().includes(lowerInput)
         );
 
         if (!poi) return null; 
 
-        // 2. Map the found POI Name to the Graph ID
-        // (We use the full name from the found POI to ensure accuracy)
+        // Map POI Names to Graph IDs
         if (poi.name === "Girls Hostel") return "hostel-g-entrance";
         if (poi.name === "GYM") return "gym-entrance";
         if (poi.name === "MITM School Area") return "school-area-entrance";
@@ -158,139 +166,175 @@ document.addEventListener('DOMContentLoaded', function() {
         if (poi.name === "Maths Department") return "maths-dept-entrance";
         if (poi.name === "Main Building") return "main-building-entrance";
 
-        // Fallback generator
         const nodeId = poi.name.toLowerCase().replace(/ /g, '-') + "-entrance";
         if (campusGraph[nodeId]) return nodeId;
-        
         return null;
     }
 
     // ==========================================
-    // 4. ROUTE UI LOGIC
+    // 4. STATS, VOICE & ROUTING
     // ==========================================
 
-    let currentRoutePolyline = null; 
-    const findRouteBtn = document.getElementById('getDirectionsButton'); 
-
-    findRouteBtn.addEventListener('click', function() {
-        const startName = document.getElementById('start-location').value;
-        const destName = document.getElementById('destination').value;
-        const instructionsDiv = document.getElementById('route-instructions');
-
-        if (currentRoutePolyline) {
-            map.removeLayer(currentRoutePolyline);
+    function getPathStats(pathNodeIds) {
+        let totalPixels = 0;
+        for (let i = 0; i < pathNodeIds.length - 1; i++) {
+            let nodeA = campusGraph[pathNodeIds[i]];
+            let nodeB = campusGraph[pathNodeIds[i+1]];
+            totalPixels += calculateDistance(nodeA.coords, nodeB.coords);
         }
+        const meters = Math.round(totalPixels / 4); 
+        const minutes = Math.ceil(meters / 80); 
+        return { meters, minutes };
+    }
 
-        if (!startName || !destName) {
-            instructionsDiv.innerHTML = "<h2>Error</h2><p>Please enter both a start location and a destination.</p>";
-            return;
-        }
-
-        const startNodeId = findNodeIdByName(startName);
-        const endNodeId = findNodeIdByName(destName);
-
-        if (!startNodeId || !endNodeId) {
-            instructionsDiv.innerHTML = `<h2>Error</h2><p>One of the locations was not found.</p>`;
-            return;
-        }
-
-        const pathNodeIds = findShortestPath(startNodeId, endNodeId);
-
-        if (!pathNodeIds) {
-            instructionsDiv.innerHTML = "<h2>Error</h2><p>No valid path could be found.</p>";
-            return;
-        }
-
-        const pathCoords = pathNodeIds.map(nodeId => campusGraph[nodeId].coords);
-
-        currentRoutePolyline = L.polyline(pathCoords, { 
-            color: '#ff0000', 
-            weight: 5, 
-            opacity: 0.8 
-        }).addTo(map);
-
-        map.fitBounds(currentRoutePolyline.getBounds());
-        instructionsDiv.innerHTML = `<h2>Success!</h2><p>Route found from ${startName} to ${destName}.</p>`;
-    });
-
-    // ==========================================
-    // 5. SEARCH & CLEAR CONTROLS
-    // ==========================================
-
-    const clearBtn = document.getElementById('clearRouteButton');
-    
-    clearBtn.addEventListener('click', function() {
-        if (currentRoutePolyline) {
-            map.removeLayer(currentRoutePolyline);
-            currentRoutePolyline = null;
-        }
-        document.getElementById('start-location').value = '';
-        document.getElementById('destination').value = '';
-        document.getElementById('route-instructions').innerHTML = '';
-        map.fitBounds(bounds);
-    });
-
-    const searchInput = document.getElementById('searchInput');
-    const searchBtn = document.getElementById('searchButton');
-
-    function performSearch() {
-        const query = searchInput.value;
-        if (!query) return;
-
-        const target = campusData.find(poi => 
-            poi.name.toLowerCase().includes(query.toLowerCase())
-        );
-
-        if (target) {
-            map.setView(target.coordinates, 2); 
-            map.eachLayer(layer => {
-                if (layer instanceof L.Marker && layer.getPopup()) {
-                    if (layer.getPopup().getContent().includes(target.name)) {
-                        layer.openPopup();
-                    }
-                }
-            });
-            document.getElementById('location-name').innerText = target.name;
-            document.getElementById('location-description').innerText = target.description || "No description available.";
-        } else {
-            alert("Location not found!");
+    function speakDirections(text) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const msg = new SpeechSynthesisUtterance();
+            msg.text = text;
+            msg.rate = 0.9;
+            window.speechSynthesis.speak(msg);
         }
     }
 
-    searchBtn.addEventListener('click', performSearch);
-    searchInput.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') performSearch();
-    });
+    function drawRoute(startName, endName) {
+        routeLayerGroup.clearLayers();
+        
+        // Hide POIs when routing to reduce clutter
+        if (map.hasLayer(poiLayerGroup)) {
+            map.removeLayer(poiLayerGroup);
+        }
+
+        const startId = findNodeIdByName(startName);
+        const endId = findNodeIdByName(endName);
+
+        if (!startId || !endId) { alert("Location not found."); return; }
+
+        const pathIds = findShortestPath(startId, endId);
+        if (!pathIds) { alert("No path found."); return; }
+
+        const coords = pathIds.map(id => campusGraph[id].coords);
+
+        const roadBase = L.polyline(coords, { color: '#2563eb', weight: 10, opacity: 0.6, lineCap: 'round', lineJoin: 'round' }).addTo(routeLayerGroup);
+        L.polyline(coords, { color: '#ffffff', weight: 4, opacity: 0.9, dashArray: '10, 15', lineCap: 'round', lineJoin: 'round', className: 'walking-path' }).addTo(routeLayerGroup);
+
+        // Add Start/End Markers
+        const startCoord = campusGraph[startId].coords;
+        const endCoord = campusGraph[endId].coords;
+        L.circleMarker(startCoord, { radius: 8, color: 'white', fillColor: '#10b981', fillOpacity: 1, weight: 3 }).addTo(routeLayerGroup).bindPopup("Start: " + startName);
+        L.circleMarker(endCoord, { radius: 8, color: 'white', fillColor: '#ef4444', fillOpacity: 1, weight: 3 }).addTo(routeLayerGroup).bindPopup("End: " + endName).openPopup();
+
+        map.fitBounds(roadBase.getBounds(), { padding: [50, 50] });
+
+        const stats = getPathStats(pathIds);
+        const instructions = document.getElementById('route-instructions');
+        if(instructions) {
+            instructions.innerHTML = `
+                <div style="background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); text-align: center;">
+                    <h3 style="margin:0 0 5px 0; color:#1e293b;">${startName} ➝ ${endName}</h3>
+                    <p style="margin:0; font-size:1.1rem;"><strong>${stats.meters}m</strong> (~${stats.minutes} min)</p>
+                </div>`;
+        }
+
+        speakDirections(`Route calculated from ${startName} to ${endName}. It is a ${stats.minutes} minute walk.`);
+    }
+
+    // ==========================================
+    // 5. EVENT LISTENERS
+    // ==========================================
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    const pStart = urlParams.get('start');
+    const pEnd = urlParams.get('end');
+
+    if (pStart && pEnd) {
+        setTimeout(() => drawRoute(pStart, pEnd), 500);
+    }
+
     const sidebar = document.querySelector('.sidebar-card');
     const toggleHandle = document.getElementById('mobile-toggle-handle');
-    
-    // Function to open sidebar
-    function openSidebar() {
-        sidebar.classList.add('open');
+    if (sidebar && toggleHandle) {
+        toggleHandle.addEventListener('click', () => sidebar.classList.toggle('open'));
+        document.getElementById('searchInput')?.addEventListener('focus', () => sidebar.classList.add('open'));
     }
 
-    // Function to toggle (open/close)
-    function toggleSidebar() {
-        sidebar.classList.toggle('open');
+    const findRouteBtn = document.getElementById('getDirectionsButton');
+    if (findRouteBtn) {
+        findRouteBtn.addEventListener('click', function() {
+            const s = document.getElementById('start-location').value;
+            const d = document.getElementById('destination').value;
+            drawRoute(s, d);
+        });
     }
 
-    // 1. Clicking the Handle toggles it
-    if(toggleHandle) {
-        toggleHandle.addEventListener('click', toggleSidebar);
+    const clearBtn = document.getElementById('clearRouteButton');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function() {
+            routeLayerGroup.clearLayers();
+            if (!map.hasLayer(poiLayerGroup)) {
+                map.addLayer(poiLayerGroup);
+            }
+            const inst = document.getElementById('route-instructions');
+            if(inst) inst.innerHTML = '';
+            map.fitBounds(bounds);
+            window.speechSynthesis.cancel();
+        });
     }
 
-    // 2. Typing in search automatically opens it
-    document.getElementById('searchInput').addEventListener('focus', openSidebar);
-    
-    // 3. Typing in route planner opens it
-    document.getElementById('start-location').addEventListener('focus', openSidebar);
-    document.getElementById('destination').addEventListener('focus', openSidebar);
+    // ==========================================
+    // 6. INDOOR NAVIGATION LOGIC
+    // ==========================================
 
-    // 4. Searching or Getting Directions keeps it open
-    searchBtn.addEventListener('click', openSidebar);
-    findRouteBtn.addEventListener('click', openSidebar);
-    
-    // --- Dev Helper: Click to get coordinates (Optional: Keep for future updates) ---
+    // We attach this to 'window' so the HTML popup button can call it
+    window.enterBuilding = function(buildingName) {
+        const target = campusData.find(b => b.name === buildingName);
+        if (!target || !target.indoorMap) {
+            alert("No indoor map available for this building yet.");
+            return;
+        }
+
+        // 1. Clear everything
+        poiLayerGroup.clearLayers();
+        routeLayerGroup.clearLayers();
+        if(document.getElementById('route-instructions')) document.getElementById('route-instructions').innerHTML = '';
+
+        // 2. Remove Outdoor Map
+        if (map.hasLayer(currentImageLayer)) {
+            map.removeLayer(currentImageLayer);
+        }
+
+        // 3. Load Indoor Map
+        const indoorBounds = target.indoorMap.bounds;
+        const indoorImage = target.indoorMap.image;
+        
+        let indoorLayer = L.imageOverlay(indoorImage, indoorBounds).addTo(map);
+        map.fitBounds(indoorBounds);
+
+        // 4. Show "Exit" Button
+        const backBtn = document.createElement('button');
+        backBtn.innerText = "← Exit Building";
+        backBtn.style.position = "absolute";
+        backBtn.style.top = "20px";
+        backBtn.style.left = "20px";
+        backBtn.style.zIndex = "9999";
+        backBtn.style.padding = "10px 20px";
+        backBtn.style.background = "white";
+        backBtn.style.border = "2px solid #2563eb";
+        backBtn.style.borderRadius = "30px";
+        backBtn.style.cursor = "pointer";
+        backBtn.style.fontWeight = "bold";
+        backBtn.style.boxShadow = "0 4px 10px rgba(0,0,0,0.2)";
+        
+        backBtn.onclick = function() {
+            location.reload(); // Simplest way to return to main state
+        };
+        
+        document.body.appendChild(backBtn);
+        
+        // (Optional) Add indoor markers here later...
+    };
+
+    // Dev Helper
     map.on('click', function(e) {
         const y = Math.round(e.latlng.lat);
         const x = Math.round(e.latlng.lng);

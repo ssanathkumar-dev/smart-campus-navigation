@@ -12,49 +12,16 @@
         crossorigin=""/>
 </head>
 <body>
-
     <div id="map"></div>
 
-    <div class="sidebar-card fade-in">
-        <div id="mobile-toggle-handle"></div> 
+    <a href="dashboard.html" style="position: absolute; top: 20px; left: 20px; z-index: 1000; background: white; padding: 10px 20px; border-radius: 30px; text-decoration: none; color: #333; font-weight: 600; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+        ← Back to Planner
+    </a>
 
-    <header>
-        <h1>Campus Navigator</h1>
-    </header>
-        
+    <div id="route-instructions" style="position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 1000; width: 90%; max-width: 400px;"></div>
 
-        <div class="control-group">
-            <input type="text" id="searchInput" placeholder="Search for a location...">
-            <button id="searchButton">Search</button>
-        </div>
-        
-        <hr>
-
-        <div id="info-panel">
-            <h3>Location Details</h3>
-            <div id="location-name" class="info-box">Select a building on the map.</div>
-            <div id="location-description"></div>
-        </div>
-
-        <hr>
-
-        <div id="navigation-panel">
-            <h3>Route Planner</h3>
-            <div class="route-inputs">
-                <input type="text" id="start-location" placeholder="Start location">
-                <input type="text" id="destination" placeholder="End location">
-            </div>
-            <div class="button-group">
-                <button id="getDirectionsButton" class="btn-primary">Get Directions</button>
-                <button id="clearRouteButton" class="btn-secondary">Clear Route</button>
-            </div>
-            <div id="route-instructions"></div>
-        </div>
-    </div>
-    
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <script src="js/map_data.js"></script> 
     <script src="js/script.js"></script> 
-
 </body>
 </html>

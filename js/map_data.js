@@ -15,7 +15,17 @@ const campusData = [
     { name: "Basketball Ground", coordinates: [2423, 1620] },
     { name: "College Library", coordinates: [1942, 1401] },
     { name: "Maths Department", coordinates: [1832, 1138] },
-    { name: "Main Building", coordinates: [1616, 872] },
+    { 
+        name: "Main Building", 
+        coordinates: [1616, 872],
+        // New Indoor Map Data
+        indoorMap: {
+            image: "assets/main_ground.jpg", // Make sure file name matches!
+            bounds: [[0, 0], [1728, 2464]]   // [Height, Width]
+        }
+    },
+
+
     { name: "MITM Juice Stall", coordinates: [1690, 1534] },
     { name: "MITM Store", coordinates: [1694, 1579] },
     { name: "MITM Bakery", coordinates: [1693, 1622] },
