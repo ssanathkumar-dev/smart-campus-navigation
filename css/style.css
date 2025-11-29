@@ -160,17 +160,50 @@ button:active {
     border-radius: 10px;
 }
 
-/* --- MOBILE RESPONSIVENESS --- */
+/* --- MOBILE OPTIMIZATION (Google Maps Style) --- */
 @media (max-width: 768px) {
+    
     .sidebar-card {
-        top: auto;
-        bottom: 0;
+        top: auto;          /* Unset top position */
+        bottom: 0;          /* Stick to bottom */
         left: 0;
         right: 0;
-        width: 100%;
-        max-height: 50vh;
-        border-radius: 20px 20px 0 0;
-        padding: 20px;
+        width: 100%;        /* Full width */
+        max-height: 40vh;   /* Only take up 40% of the screen height */
+        border-radius: 20px 20px 0 0; /* Round the top corners */
+        padding: 15px;      /* Less padding */
+        box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+        display: flex;      /* Use flexbox to organize content */
+        flex-direction: column;
+    }
+
+    /* Hide the big title to save space */
+    header h1 {
+        display: none;
+    }
+
+    /* Make the horizontal lines invisible to save space */
+    hr {
+        margin: 10px 0;
+        opacity: 0.5;
+    }
+
+    /* Make text inputs smaller */
+    input[type="text"] {
+        padding: 8px 12px;
+        font-size: 14px; /* Prevents iPhone zoom on focus */
+        margin-bottom: 5px;
+    }
+
+    /* Make buttons compact */
+    .btn-primary, .btn-secondary, #searchButton {
+        padding: 8px;
+        font-size: 14px;
+    }
+
+    /* Ensure we can scroll inside the card if content is long */
+    #info-panel, #navigation-panel {
+        overflow-y: auto;
     }
 }
 
