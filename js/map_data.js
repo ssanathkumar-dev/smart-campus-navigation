@@ -18,10 +18,25 @@ const campusData = [
     { 
         name: "Main Building", 
         coordinates: [1616, 872],
-        // New Indoor Map Data
+        
+        // UPDATED: Now supports multiple floors!
         indoorMap: {
-            image: "assets/main_ground.jpg", // Make sure file name matches!
-            bounds: [[0, 0], [1728, 2464]]   // [Height, Width]
+            "Ground Floor": {
+                image: "assets/main_ground.svg", 
+                bounds: [[0, 0], [2384, 3370]] 
+            },
+            "1st Floor": {
+                image: "assets/main_1st.svg", 
+                bounds: [[0, 0], [2384,3370]] 
+            },
+            "2nd Floor": {
+                image: "assets/main_2nd.svg", 
+                bounds: [[0, 0], [2384, 3370]]
+            },
+            "3nd Floor": {
+                image: "assets/main_3nd.svg", 
+                bounds: [[0, 0], [2384, 3370]]
+            }
         }
     },
 
