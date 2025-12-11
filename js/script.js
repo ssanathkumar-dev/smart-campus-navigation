@@ -22,10 +22,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize Layer Groups
     let routeLayerGroup = L.layerGroup().addTo(map);
     let poiLayerGroup = L.layerGroup().addTo(map);
-    let indoorLayerGroup = L.layerGroup().addTo(map); // For indoor rooms & paths
+    let indoorLayerGroup = L.layerGroup().addTo(map); 
 
     // ==========================================
-    // 2. HELPER FUNCTIONS (Outdoor)
+    // 2. HELPER FUNCTIONS
     // ==========================================
 
     function calculateDistance(coordA, coordB) {
@@ -33,6 +33,32 @@ document.addEventListener('DOMContentLoaded', function() {
         const dy = coordB[0] - coordA[0]; 
         const distance = Math.sqrt(dx * dx + dy * dy);
         return Math.round(distance);
+    }
+
+    function getPathStats(pathNodeIds, isIndoor = false) {
+        let totalPixels = 0;
+        const nodes = isIndoor ? indoorNodes : campusGraph; 
+
+        for (let i = 0; i < pathNodeIds.length - 1; i++) {
+            let idA = pathNodeIds[i];
+            let idB = pathNodeIds[i+1];
+            let coordsA = nodes[idA].coords;
+            let coordsB = nodes[idB].coords;
+            totalPixels += calculateDistance(coordsA, coordsB);
+        }
+        const meters = Math.round(totalPixels / 4); 
+        const minutes = Math.ceil(meters / 80); 
+        return { meters, minutes };
+    }
+
+    function speakDirections(text) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const msg = new SpeechSynthesisUtterance();
+            msg.text = text;
+            msg.rate = 0.9;
+            window.speechSynthesis.speak(msg);
+        }
     }
 
     function addPoiMarker(building) {
@@ -50,7 +76,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ==========================================
-    // 3. OUTDOOR A* PATHFINDING
+    // 3. OUTDOOR ROUTING
     // ==========================================
 
     function findShortestPath(startNodeId, endNodeId) {
@@ -78,7 +104,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             if (current === endNodeId) return reconstructPath(cameFrom, current);
-
             openSet.delete(current);
 
             if (campusGraph[current]) {
@@ -86,12 +111,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 for (let neighborId in neighbors) {
                     let distance = neighbors[neighborId];
                     let tentativeGScore = gScore[current] + distance;
-
                     if (tentativeGScore < gScore[neighborId]) {
                         cameFrom[neighborId] = current;
                         gScore[neighborId] = tentativeGScore;
                         fScore[neighborId] = gScore[neighborId] + heuristic(neighborId, endNodeId);
-                        if (!openSet.has(neighborId)) openSet.add(neighborId);
+                        openSet.add(neighborId);
                     }
                 }
             }
@@ -123,35 +147,14 @@ document.addEventListener('DOMContentLoaded', function() {
             "girls hostel": "hostel-g-entrance",
             "gym": "gym-entrance",
             "mitm school area": "school-area-entrance",
-            "mitm school play area": "school-play-entrance",
-            "ayurveda building": "ayurveda-entrance",
-            "bca bba block": "bca-bba-entrance",
-            "auditorium": "auditorium-entrance",
-            "mba, mca block": "mba-mca-entrance",
-            "boys hostel block": "hostel-b-entrance",
-            "parking lot a": "parking-a-entrance",
-            "basketball ground": "basketball-entrance",
-            "college library": "library-entrance",
-            "maths department": "maths-dept-entrance",
             "main building": "main-building-entrance",
             "canteen": "canteen-entrance"
         };
         
         if (mappings[poi.name.toLowerCase()]) return mappings[poi.name.toLowerCase()];
-        
         const nodeId = poi.name.toLowerCase().replace(/ /g, '-') + "-entrance";
         if (campusGraph[nodeId]) return nodeId;
         return null;
-    }
-
-    function speakDirections(text) {
-        if ('speechSynthesis' in window) {
-            window.speechSynthesis.cancel();
-            const msg = new SpeechSynthesisUtterance();
-            msg.text = text;
-            msg.rate = 0.9;
-            window.speechSynthesis.speak(msg);
-        }
     }
 
     function drawRoute(startName, endName) {
@@ -168,24 +171,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const coords = pathIds.map(id => campusGraph[id].coords);
 
-        const roadBase = L.polyline(coords, { color: '#2563eb', weight: 10, opacity: 0.6, lineCap: 'round', lineJoin: 'round' }).addTo(routeLayerGroup);
-        L.polyline(coords, { color: '#ffffff', weight: 4, opacity: 0.9, dashArray: '10, 15', lineCap: 'round', lineJoin: 'round', className: 'walking-path' }).addTo(routeLayerGroup);
+        const roadBase = L.polyline(coords, { color: '#2563eb', weight: 8, opacity: 0.6 }).addTo(routeLayerGroup);
+        L.polyline(coords, { color: '#ffffff', weight: 3, opacity: 0.9, dashArray: '10, 15', className: 'walking-path' }).addTo(routeLayerGroup);
 
         const startCoord = campusGraph[startId].coords;
         const endCoord = campusGraph[endId].coords;
-        L.circleMarker(startCoord, { radius: 8, color: 'white', fillColor: '#10b981', fillOpacity: 1, weight: 3 }).addTo(routeLayerGroup).bindPopup("Start: " + startName);
-        L.circleMarker(endCoord, { radius: 8, color: 'white', fillColor: '#ef4444', fillOpacity: 1, weight: 3 }).addTo(routeLayerGroup).bindPopup("End: " + endName).openPopup();
+        L.circleMarker(startCoord, { radius: 8, color: 'white', fillColor: '#10b981', fillOpacity: 1 }).addTo(routeLayerGroup).bindPopup("Start: " + startName);
+        L.circleMarker(endCoord, { radius: 8, color: 'white', fillColor: '#ef4444', fillOpacity: 1 }).addTo(routeLayerGroup).bindPopup("End: " + endName).openPopup();
 
         map.fitBounds(roadBase.getBounds(), { padding: [50, 50] });
-        speakDirections(`Route calculated from ${startName} to ${endName}.`);
+        const stats = getPathStats(pathIds, false); 
+        speakDirections(`Route calculated. Distance is ${stats.meters} meters. About ${stats.minutes} minutes walking.`);
     }
 
     // ==========================================
-    // 5. INDOOR NAVIGATION LOGIC
+    // 5. INDOOR NAVIGATION (DEV MODE)
     // ==========================================
 
     window.enterBuilding = function(buildingName, floorName) {
-        console.log(`Request to enter: ${buildingName} - ${floorName}`);
+        console.log(`Entering: ${buildingName} - ${floorName}`);
 
         const target = campusData.find(b => b.name === buildingName);
         if (!target || !target.indoorMap) { alert("No indoor map data found."); return; }
@@ -194,67 +198,108 @@ document.addEventListener('DOMContentLoaded', function() {
         window.currentFloorName = selectedFloor; 
 
         const floorData = target.indoorMap[selectedFloor];
-        if (!floorData) { alert(`Map for ${selectedFloor} missing.`); return; }
-
-        // Clear Outdoor Layers
+        
         poiLayerGroup.clearLayers();
         routeLayerGroup.clearLayers();
         if(map.hasLayer(currentImageLayer)) map.removeLayer(currentImageLayer);
 
-        // Load INDOOR Map
         if (window.currentIndoorLayer) map.removeLayer(window.currentIndoorLayer);
         window.currentIndoorLayer = L.imageOverlay(floorData.image, floorData.bounds).addTo(map);
         map.fitBounds(floorData.bounds);
 
-        // NO DEFAULT MARKERS LOADED (Map starts clean)
-        indoorLayerGroup.clearLayers();
+        // 1. SHOW ALL DOTS (Visible for Dev)
+        loadIndoorMarkers(selectedFloor);
         
         addExitButton();
+
+        // 2. SHOW ALL BLUE LINES (Visible for Dev)
+        window.showBlueLines(); 
     };
+
+    function loadIndoorMarkers(floorName) {
+        indoorLayerGroup.clearLayers();
+        
+        if (typeof indoorNodes !== 'undefined') {
+            Object.keys(indoorNodes).forEach(nodeId => {
+                const node = indoorNodes[nodeId];
+                if (node.floor === floorName) { 
+                    
+                    // VISIBLE DOTS
+                    const marker = L.circleMarker(node.coords, {
+                        radius: 8, color: '#2563eb', fillColor: '#60a5fa', fillOpacity: 0.8, weight: 1             
+                    });
+
+                    // POPUP SHOWS NAME (For Debugging)
+                    marker.bindPopup(`<b>${node.name}</b><br><span style="font-size:0.8em; color:gray;">ID: ${nodeId}</span>`);
+
+                    // Click Handler (Routing)
+                    marker.on('click', function() {
+                        handleIndoorClick(nodeId, marker);
+                    });
+                    
+                    indoorLayerGroup.addLayer(marker);
+                }
+            });
+            indoorLayerGroup.addTo(map);
+        }
+    }
 
     function addExitButton() {
         if(document.getElementById('exit-btn')) return;
         const backBtn = document.createElement('button');
         backBtn.id = 'exit-btn';
         backBtn.innerText = "← Exit to Dashboard";
-        backBtn.style.cssText = "position:absolute; top:20px; left:20px; z-index:9999; padding:12px 20px; background:white; border:2px solid #2563eb; border-radius:30px; cursor:pointer; font-weight:bold; box-shadow:0 4px 10px rgba(0,0,0,0.2); transition: transform 0.2s;";
+        backBtn.style.cssText = "position:absolute; top:20px; left:20px; z-index:9999; padding:12px 20px; background:white; border:2px solid #2563eb; border-radius:30px; cursor:pointer; font-weight:bold; box-shadow:0 4px 10px rgba(0,0,0,0.2);";
         backBtn.onclick = function() { window.location.href = "dashboard.html"; };
         document.body.appendChild(backBtn);
     }
 
-    // --- DISPLAY ROUTE ONLY (No Clicks) ---
-    
+    // --- INDOOR ROUTING ---
     let indoorStart = null;
     let indoorEnd = null;
+
+    function handleIndoorClick(nodeId, marker) {
+        marker.openPopup(); // Show name
+
+        if (!indoorStart || (indoorStart && indoorEnd)) {
+            resetIndoorState();
+            indoorStart = nodeId;
+            marker.setStyle({ fillColor: '#10b981', color: '#059669' }); // Green
+            speakDirections(`Start: ${indoorNodes[nodeId].name}`);
+        } else if (!indoorEnd && nodeId !== indoorStart) {
+            indoorEnd = nodeId;
+            marker.setStyle({ fillColor: '#ef4444', color: '#b91c1c' }); // Red
+            checkIndoorRoute();
+        }
+    }
+
+    function resetIndoorState() {
+        indoorStart = null;
+        indoorEnd = null;
+        indoorLayerGroup.eachLayer(layer => {
+            if (layer instanceof L.Polyline && !(layer instanceof L.CircleMarker)) { 
+                 indoorLayerGroup.removeLayer(layer); 
+            }
+            if (layer instanceof L.CircleMarker) { 
+                layer.setStyle({ fillColor: '#60a5fa', color: '#2563eb' }); // Reset Blue
+            }
+        });
+        window.showBlueLines();
+    }
 
     function checkIndoorRoute() {
         if (!indoorStart || !indoorEnd) return;
 
-        // 1. Calculate Path
         const pathIds = findIndoorPath(indoorStart, indoorEnd);
-        if (!pathIds) { alert("No path found inside building! Check connections."); return; }
+        if (!pathIds) { alert("No path found inside building!"); return; }
 
-        // 2. Clear Previous Route/Markers
-        indoorLayerGroup.clearLayers();
-
-        // 3. Draw Path Line
         const routeCoords = pathIds.map(id => indoorNodes[id].coords);
         L.polyline(routeCoords, {
-            color: '#2563eb', weight: 6, opacity: 0.8, dashArray: '10, 10', className: 'walking-path' 
+            color: '#2563eb', weight: 6, opacity: 0.9, dashArray: '10, 10', className: 'walking-path' 
         }).addTo(indoorLayerGroup);
         
-        // 4. Draw Start Dot (Green)
         const startNode = indoorNodes[indoorStart];
-        L.circleMarker(startNode.coords, {
-            radius: 12, color: '#059669', fillColor: '#10b981', fillOpacity: 1, weight: 3
-        }).bindPopup(`<b>Start: ${startNode.name}</b>`).addTo(indoorLayerGroup).openPopup();
-
-        // 5. Draw End Dot (Red)
         const endNode = indoorNodes[indoorEnd];
-        L.circleMarker(endNode.coords, {
-            radius: 12, color: '#b91c1c', fillColor: '#ef4444', fillOpacity: 1, weight: 3
-        }).bindPopup(`<b>Destination: ${endNode.name}</b>`).addTo(indoorLayerGroup);
-
         speakDirections(`Navigating from ${startNode.name} to ${endNode.name}.`);
     }
 
@@ -300,7 +345,23 @@ document.addEventListener('DOMContentLoaded', function() {
         return null;
     }
 
-    // Helper to find ID by Name
+    // --- DEBUG TOOL: SHOW ALL CONNECTIONS ---
+    window.showBlueLines = function() {
+        Object.keys(indoorGraph).forEach(nodeId => {
+            const nodeA = indoorNodes[nodeId];
+            const neighbors = indoorGraph[nodeId].neighbors;
+            Object.keys(neighbors).forEach(neighborId => {
+                const nodeB = indoorNodes[neighborId];
+                if (!nodeA || !nodeB) return;
+                if (nodeA.floor === window.currentFloorName && nodeB.floor === window.currentFloorName) {
+                    L.polyline([nodeA.coords, nodeB.coords], {
+                        color: '#3b82f6', weight: 1, opacity: 0.5, dashArray: '5, 5', interactive: false 
+                    }).addTo(indoorLayerGroup);
+                }
+            });
+        });
+    };
+
     function findIndoorNodeIdByName(searchTerm) {
         if (!searchTerm || typeof indoorNodes === 'undefined') return null;
         const lowerTerm = searchTerm.toLowerCase().trim();
@@ -309,6 +370,13 @@ document.addEventListener('DOMContentLoaded', function() {
             return nodeName.includes(lowerTerm);
         });
     }
+
+    // --- CLICK TOOL (CONSOLE ONLY - NO POPUP) ---
+    map.on('click', function(e) {
+        var coord = Math.round(e.latlng.lat) + ", " + Math.round(e.latlng.lng);
+        console.log("Clicked Coordinates:", coord); 
+        // alert(coord);  <-- REMOVED POPUP
+    });
 
     // ==========================================
     // 7. INITIALIZATION & EVENTS
@@ -349,6 +417,13 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }, 500);
     } 
+    // CASE D: DEV FORCE OPEN
+    else if (urlParams.get('force_floor')) {
+        console.log("Dev Mode: Forcing 1st Floor");
+        setTimeout(() => {
+            window.enterBuilding("Main Building", "1st Floor");
+        }, 500);
+    }
     // CASE C: Just Enter Building
     else if (pBuilding) {
         const pFloor = urlParams.get('floor');

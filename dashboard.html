@@ -144,7 +144,7 @@
                 <div class="select-wrapper">
                     <select id="buildingSelect">
                         <option value="" disabled selected>-- Choose Building --</option>
-                        </select>
+                    </select>
                 </div>
             </div>
 
@@ -159,6 +159,12 @@
             </div>
 
             <button onclick="navigateIndoor()" class="btn-go secondary">Find Indoor Route</button>
+            
+            <button type="button" 
+                    onclick="window.location.href='map.html?force_floor=1'" 
+                    style="width: 100%; margin-top: 15px; padding: 12px; background-color: #f59e0b; color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                🛠️ DEV: Open 1st Floor Map
+            </button>
         </div>
 
     </div>
