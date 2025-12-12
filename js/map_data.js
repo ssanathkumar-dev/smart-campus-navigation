@@ -33,8 +33,8 @@ const campusData = [
                 image: "assets/main_2nd.svg", 
                 bounds: [[0, 0], [2384, 3370]]
             },
-            "3nd Floor": {
-                image: "assets/main_3nd.svg", 
+            "3rd Floor": {
+                image: "assets/main_3rd.svg", 
                 bounds: [[0, 0], [2384, 3370]]
             }
         }

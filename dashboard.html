@@ -160,12 +160,23 @@
 
             <button onclick="navigateIndoor()" class="btn-go secondary">Find Indoor Route</button>
             
-            <button type="button" 
-                    onclick="window.location.href='map.html?force_floor=1'" 
-                    style="width: 100%; margin-top: 15px; padding: 12px; background-color: #f59e0b; color: white; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-                🛠️ DEV: Open 1st Floor Map
-            </button>
-        </div>
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <button type="button" 
+                        onclick="window.location.href='map.html?force_floor=1st Floor'" 
+                        style="flex:1; padding: 10px; background-color: #f59e0b; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">
+                    🛠️ 1st
+                </button>
+                <button type="button" 
+                        onclick="window.location.href='map.html?force_floor=2nd Floor'" 
+                        style="flex:1; padding: 10px; background-color: #f59e0b; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">
+                    🛠️ 2nd
+                </button>
+                <button type="button" 
+                        onclick="window.location.href='map.html?force_floor=3rd Floor'" 
+                        style="flex:1; padding: 10px; background-color: #f59e0b; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">
+                    🛠️ 3rd
+                </button>
+            </div>
 
     </div>
 

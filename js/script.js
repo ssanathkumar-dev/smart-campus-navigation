@@ -417,11 +417,12 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }, 500);
     } 
-    // CASE D: DEV FORCE OPEN
-    else if (urlParams.get('force_floor')) {
-        console.log("Dev Mode: Forcing 1st Floor");
+    // CASE D: DEV FORCE OPEN (Any Floor)
+    const forceFloor = urlParams.get('force_floor');
+    if (forceFloor) {
+        console.log(`Dev Mode: Forcing ${forceFloor}`);
         setTimeout(() => {
-            window.enterBuilding("Main Building", "1st Floor");
+            window.enterBuilding("Main Building", forceFloor);
         }, 500);
     }
     // CASE C: Just Enter Building

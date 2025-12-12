@@ -244,6 +244,10 @@ const indoorNodes = {
 
     "room-230":       { coords: [611, 2599], name: "Room 230", floor: "1st Floor" },
     "r230-door":      { coords: [714, 2651], name: "Room 230 Door", floor: "1st Floor", type: "junction" },
+    // TEMPORARY ANCHORS (To open maps for mapping)
+    "dev-1st": { coords: [0, 0], name: "Dev 1st Floor", floor: "1st Floor", type: "junction" },
+    "dev-2nd": { coords: [0, 0], name: "Dev 2nd Floor", floor: "2nd Floor", type: "junction" },
+    "dev-3rd": { coords: [0, 0], name: "Dev 3rd Floor", floor: "3rd Floor", type: "junction" },
 };
 
 // ==========================================
