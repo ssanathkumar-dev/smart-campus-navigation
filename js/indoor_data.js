@@ -1,40 +1,30 @@
-// INDOOR MAP DATA (Ground Floor & 1st Floor - Final Production)
+// INDOOR MAP DATA (Ground, 1st & 2nd Floor - Final Master)
 
 // ==========================================
 // 1. DEFINE NODES
 // ==========================================
 const indoorNodes = {
     // --------------------------------------
-    // GROUND FLOOR NODES
+    // GROUND FLOOR NODES (Unchanged)
     // --------------------------------------
-
-    // --- ENTRANCES ---
     "ent-1-out": { coords: [256, 1704], name: "Main Entrance (Outside)", floor: "Ground Floor", type: "connector" },
     "ent-1-in":  { coords: [616, 1712], name: "Main Entrance (Lobby)",   floor: "Ground Floor", type: "junction" },
     "ent-2-out": { coords: [700, 2768], name: "Side Entrance A (Outside)", floor: "Ground Floor", type: "connector" },
     "ent-2-in":  { coords: [743, 2572], name: "Side Entrance A (Inside)",  floor: "Ground Floor", type: "junction" },
     "ent-3-out": { coords: [1872, 2750], name: "Side Entrance B (Outside)", floor: "Ground Floor", type: "connector" },
     "ent-3-in":  { coords: [1828, 2495], name: "Side Entrance B (Inside)",  floor: "Ground Floor", type: "junction" },
-
-    // --- MAIN HALLWAY JUNCTIONS ---
     "junc-spine-right": { coords: [627, 2430], name: "East Corridor Start", floor: "Ground Floor", type: "junction" },
     "junc-center-1":    { coords: [623, 962],  name: "Center Hall A", floor: "Ground Floor", type: "junction" },
     "junc-center-2":    { coords: [791, 925],  name: "Center Hall B", floor: "Ground Floor", type: "junction" },
     "junc-center-3":    { coords: [808, 829],  name: "Center Hall C", floor: "Ground Floor", type: "junction" },
-    
-    // Hallway Junctions (Top Side)
     "hall-115":         { coords: [865, 830],  name: "Hallway (Room 115)", floor: "Ground Floor", type: "junction" },
     "hall-116":         { coords: [974, 834],  name: "Hallway (Room 116)", floor: "Ground Floor", type: "junction" },
     "hall-120":         { coords: [1294, 836], name: "Hallway (Room 120/117)", floor: "Ground Floor", type: "junction" },
     "hall-118":         { coords: [1769, 841], name: "Hallway (Room 118)", floor: "Ground Floor", type: "junction" },
     "hall-114":         { coords: [735, 938],  name: "Hallway (Room 114)", floor: "Ground Floor", type: "junction" },
-
-    // Center Extensions
     "junc-center-4":    { coords: [1798, 843], name: "Center Hall D", floor: "Ground Floor", type: "junction" },
     "junc-center-5":    { coords: [1912, 916], name: "Center Hall E", floor: "Ground Floor", type: "junction" },
     "junc-center-6":    { coords: [1964, 1056],name: "Center Hall F", floor: "Ground Floor", type: "junction" },
-
-    // --- RIGHT VERTICAL CORRIDOR ---
     "hall-121":         { coords: [1946, 979],  name: "Hallway (Room 121)", floor: "Ground Floor", type: "junction" },
     "hall-106":         { coords: [1956, 1036], name: "Hallway (Room 106)", floor: "Ground Floor", type: "junction" },
     "hall-122":         { coords: [1964, 1119], name: "Hallway (Room 122)", floor: "Ground Floor", type: "junction" },
@@ -42,21 +32,14 @@ const indoorNodes = {
     "hall-124":         { coords: [1963, 1942], name: "Hallway (Room 124)", floor: "Ground Floor", type: "junction" },
     "hall-125":         { coords: [1959, 2060], name: "Hallway (Room 125)", floor: "Ground Floor", type: "junction" },
     "hall-126":         { coords: [1957, 2158], name: "Hallway (Room 126)", floor: "Ground Floor", type: "junction" },
-
-    // --- LEFT VERTICAL SPINE (Admin & Staff) ---
     "hall-110":         { coords: [618, 1498], name: "Hallway (Accounts)", floor: "Ground Floor", type: "junction" },
     "hall-111":         { coords: [619, 1276], name: "Hallway (Admission)", floor: "Ground Floor", type: "junction" },
-    
     "hall-102":         { coords: [623, 2267], name: "Hallway (Staff/Dining)", floor: "Ground Floor", type: "junction" },
     "hall-103":         { coords: [626, 2336], name: "Hallway (Room 103)", floor: "Ground Floor", type: "junction" },
     "hall-134":         { coords: [627, 2342], name: "Hallway (Room 134)", floor: "Ground Floor", type: "junction" },
     "hall-133":         { coords: [575, 2456], name: "Hallway (Room 133)", floor: "Ground Floor", type: "junction" },
-
-    // --- SOUTH HUB & BOTTOM CORRIDOR ---
     "junc-south-1":     { coords: [1959, 2421], name: "South Corridor End", floor: "Ground Floor", type: "junction" },
     "junc-south-2":     { coords: [1749, 2563], name: "South Entrance Hall", floor: "Ground Floor", type: "junction" },
-
-    // Bottom Hallway Chain
     "hall-139":         { coords: [1683, 2564], name: "Hallway (Room 139)", floor: "Ground Floor", type: "junction" },
     "hall-128":         { coords: [1541, 2568], name: "Hallway (Room 128)", floor: "Ground Floor", type: "junction" },
     "hall-138":         { coords: [1460, 2566], name: "Hallway (Room 138)", floor: "Ground Floor", type: "junction" },
@@ -67,8 +50,6 @@ const indoorNodes = {
     "hall-136":         { coords: [907, 2571],  name: "Hallway (Room 136)", floor: "Ground Floor", type: "junction" },
     "hall-132":         { coords: [788, 2574],  name: "Hallway (Room 132)", floor: "Ground Floor", type: "junction" },
     "hall-135":         { coords: [721, 2546],  name: "Hallway (Room 135)", floor: "Ground Floor", type: "junction" },
-
-    // --- ROOMS (Top & Center) ---
     "room-119":         { coords: [1562, 943], name: "Room 119 (Center)", floor: "Ground Floor" },
     "room-119-inner":   { coords: [1444, 943], name: "Room 119 (Inner)", floor: "Ground Floor" },
     "r119-door":        { coords: [1442, 905], name: "Room 119 Door", floor: "Ground Floor", type: "junction" },
@@ -76,7 +57,6 @@ const indoorNodes = {
     "r120-left":        { coords: [1182, 904], name: "Room 120 (Left)", floor: "Ground Floor", type: "junction" },
     "room-120-center":  { coords: [1078, 945], name: "Room 120 (Center)", floor: "Ground Floor" },
     "r120-mid":         { coords: [1183, 951], name: "Room 120 (Mid)", floor: "Ground Floor", type: "junction" },
-
     "room-117":         { coords: [1388, 674], name: "Room 117", floor: "Ground Floor" },
     "r117-door":        { coords: [1397, 778], name: "Room 117 Door", floor: "Ground Floor", type: "junction" },
     "r117-path":        { coords: [1294, 790], name: "Room 117 Path", floor: "Ground Floor", type: "junction" },
@@ -85,14 +65,10 @@ const indoorNodes = {
     "room-115":         { coords: [822, 752], name: "Room 115", floor: "Ground Floor" },
     "r115-door":        { coords: [864, 751], name: "Room 115 Door", floor: "Ground Floor", type: "junction" },
     "room-118":         { coords: [1774, 746], name: "Room 118", floor: "Ground Floor" },
-
-    // --- ROOMS (Admin & Staff Complex) ---
     "room-114":         { coords: [642, 822],  name: "Class Theatre (114)", floor: "Ground Floor" },
     "r114-door":        { coords: [733, 782],  name: "Room 114 Door", floor: "Ground Floor", type: "junction" },
     "room-110":         { coords: [511, 1497], name: "Accounts (110)", floor: "Ground Floor" },
     "room-111":         { coords: [512, 1276], name: "Admission (111)", floor: "Ground Floor" },
-
-    // The Dining Complex (102, 104, 105, 106, 108)
     "room-102":         { coords: [540, 2271], name: "Room 102", floor: "Ground Floor" },
     "room-104":         { coords: [468, 2273], name: "Room 104", floor: "Ground Floor" },
     "r104-mid":         { coords: [476, 2092], name: "Passage 104-106", floor: "Ground Floor", type: "junction" },
@@ -100,12 +76,9 @@ const indoorNodes = {
     "room-106-end":     { coords: [556, 1938], name: "Dining Room (106)", floor: "Ground Floor" },
     "room-105":         { coords: [461, 2058], name: "Room 105", floor: "Ground Floor" },
     "room-108":         { coords: [473, 2369], name: "Room 108", floor: "Ground Floor" },
-
     "room-103":         { coords: [553, 2333], name: "Room 103", floor: "Ground Floor" },
     "room-134":         { coords: [684, 2342], name: "Room 134", floor: "Ground Floor" },
     "room-133":         { coords: [599, 2572], name: "Room 133", floor: "Ground Floor" },
-
-    // --- ROOMS (Right Side) ---
     "room-121":         { coords: [1965, 859], name: "Room 121 (Class Theatre)", floor: "Ground Floor" },
     "r121-path":        { coords: [2010, 952], name: "Room 121 Path", floor: "Ground Floor", type: "junction" },
     "room-106":         { coords: [1867, 1036], name: "Room 106", floor: "Ground Floor" },
@@ -116,8 +89,6 @@ const indoorNodes = {
     "room-126":         { coords: [2119, 2154], name: "Room 126", floor: "Ground Floor" },
     "room-127":         { coords: [1962, 2561], name: "Room 127", floor: "Ground Floor" },
     "r127-path":        { coords: [2018, 2451], name: "Room 127 Path", floor: "Ground Floor", type: "junction" },
-
-    // --- ROOMS (Bottom Side) ---
     "room-139":         { coords: [1678, 2457], name: "Room 139", floor: "Ground Floor" },
     "room-128":         { coords: [1544, 2712], name: "Room 128", floor: "Ground Floor" },
     "room-138":         { coords: [1458, 2461], name: "Room 138", floor: "Ground Floor" },
@@ -129,134 +100,182 @@ const indoorNodes = {
     "room-132":         { coords: [807, 2721],  name: "Room 132", floor: "Ground Floor" },
     "room-135":         { coords: [729, 2433], name: "Room 135", floor: "Ground Floor" },
 
-    // --------------------------------------
-    // 1ST FLOOR NODES (COMPLETE)
-    // --------------------------------------
+    // ==========================================
+    // STAIRS
+    // ==========================================
+    "stair-1-G": { coords: [1781, 982], name: "Staircase (Up to 1st Floor)", floor: "Ground Floor", type: "junction" },
+    "stair-1-mid": { coords: [1746, 962], name: "Staircase Landing", floor: "Ground Floor", type: "junction" },
+    "stair-1-1F": { coords: [1711, 943], name: "Staircase (Down to Ground)", floor: "1st Floor", type: "junction" },
+    "stair-2-G": { coords: [1730, 2390], name: "Staircase (Up to 1st Floor)", floor: "Ground Floor", type: "junction" },
+    "stair-2-mid": { coords: [1752, 2481], name: "Staircase Landing", floor: "Ground Floor", type: "junction" },
+    "stair-3-G": { coords: [808, 2363], name: "Staircase (Up to 1st Floor)", floor: "Ground Floor", type: "junction" },
+    "stair-3-mid": { coords: [822, 2474], name: "Staircase Landing", floor: "Ground Floor", type: "junction" },
+    "stair-3-1F": { coords: [836, 2586], name: "Staircase (Down to Ground)", floor: "1st Floor", type: "junction" },
+    "stair-4-G": { coords: [858, 1001], name: "Staircase (Up to 1st Floor)", floor: "Ground Floor", type: "junction" },
+    "stair-4-mid": { coords: [818, 951], name: "Staircase Landing", floor: "Ground Floor", type: "junction" },
+    "stair-4-1F": { coords: [779, 902], name: "Staircase (Down to Ground)", floor: "1st Floor", type: "junction" },
 
-    // --- CORRIDOR: Top Chain ---
+    // ==========================================
+    // 1ST FLOOR NODES
+    // ==========================================
     "f1-hall-start": { coords: [602, 1101], name: "1st Floor West Wing", floor: "1st Floor", type: "junction" },
     "f1-hall-1":     { coords: [712, 923],  name: "1st Floor Hall 1", floor: "1st Floor", type: "junction" },
     "f1-hall-2":     { coords: [886, 870],  name: "1st Floor Hall 2", floor: "1st Floor", type: "junction" },
     "f1-hall-3":     { coords: [1809, 872], name: "1st Floor Hall 3", floor: "1st Floor", type: "junction" },
     "f1-hall-4":     { coords: [1875, 925], name: "1st Floor Hall 4", floor: "1st Floor", type: "junction" },
     "f1-hall-5":     { coords: [1935, 1012], name: "1st Floor East Wing Top", floor: "1st Floor", type: "junction" },
-
-    // --- CORRIDOR: Bottom Chain ---
     "f1-hall-7":     { coords: [1935, 2432], name: "1st Floor South Hall 1", floor: "1st Floor", type: "junction" },
     "f1-hall-8":     { coords: [1746, 2596], name: "1st Floor South Hall 2", floor: "1st Floor", type: "junction" },
     "f1-hall-9":     { coords: [740, 2586],  name: "1st Floor South Hall 3", floor: "1st Floor", type: "junction" },
     "f1-hall-end":   { coords: [604, 2429],  name: "1st Floor South West Corner", floor: "1st Floor", type: "junction" },
-
-    // --- ROOMS: West Wing (Left Vertical) ---
-    
     "room-207":       { coords: [471, 1097], name: "Room 207", floor: "1st Floor" },
-
     "room-206":       { coords: [462, 1197], name: "Room 206", floor: "1st Floor" },
     "r206-door":      { coords: [602, 1199], name: "Room 206 Door", floor: "1st Floor", type: "junction" },
-
-    // The 203/204/205 Cluster
     "r204-corr":      { coords: [602, 1520], name: "Passage to 203/204", floor: "1st Floor", type: "junction" },
     "r204-pass-1":    { coords: [534, 1517], name: "Passage 1 (205)", floor: "1st Floor", type: "junction" },
     "r204-pass-2":    { coords: [477, 1518], name: "Passage 2 (203)", floor: "1st Floor", type: "junction" },
     "r204-pass-3":    { coords: [425, 1520], name: "Passage 3 (204)", floor: "1st Floor", type: "junction" },
-    
     "room-205":       { coords: [539, 1380], name: "Room 205", floor: "1st Floor" },
     "room-203":       { coords: [485, 1594], name: "Room 203", floor: "1st Floor" },
     "room-204":       { coords: [422, 1599], name: "Room 204", floor: "1st Floor" },
-
     "room-202":       { coords: [470, 2046], name: "Room 202", floor: "1st Floor" },
     "r202-door":      { coords: [602, 2048], name: "Room 202 Door", floor: "1st Floor", type: "junction" },
-
     "room-201":       { coords: [473, 2352], name: "Room 201", floor: "1st Floor" },
     "r201-door":      { coords: [605, 2350], name: "Room 201 Door", floor: "1st Floor", type: "junction" },
-
-    // --- ROOMS: Top Row ---
     "room-208":       { coords: [608, 871],  name: "Room 208", floor: "1st Floor" },
     "r208-path":      { coords: [714, 810],  name: "Room 208 Path", floor: "1st Floor", type: "junction" }, 
-
     "room-209":       { coords: [852, 763],  name: "Room 209", floor: "1st Floor" },
     "r209-door":      { coords: [847, 881],  name: "Room 209 Door", floor: "1st Floor", type: "junction" },
-
     "room-210":       { coords: [962, 773],  name: "Room 210", floor: "1st Floor" },
     "r210-door":      { coords: [962, 872],  name: "Room 210 Door", floor: "1st Floor", type: "junction" },
-
     "room-214":       { coords: [1050, 976], name: "Room 214", floor: "1st Floor" },
     "r214-p1":        { coords: [1167, 980], name: "Room 214 Path 1", floor: "1st Floor", type: "junction" },
     "r214-p2":        { coords: [1166, 928], name: "Room 214 Path 2", floor: "1st Floor", type: "junction" },
     "r214-p3":        { coords: [1234, 927], name: "Room 214 Path 3", floor: "1st Floor", type: "junction" },
     "r214-door":      { coords: [1232, 872], name: "Room 214 Door", floor: "1st Floor", type: "junction" },
-
     "room-213":       { coords: [1534, 977], name: "Room 213", floor: "1st Floor" },
     "r213-p1":        { coords: [1367, 977], name: "Room 213 Path 1", floor: "1st Floor", type: "junction" },
     "r213-p2":        { coords: [1367, 933], name: "Room 213 Path 2", floor: "1st Floor", type: "junction" },
     "r213-p3":        { coords: [1302, 930], name: "Room 213 Path 3", floor: "1st Floor", type: "junction" },
     "r213-door":      { coords: [1302, 875], name: "Room 213 Door", floor: "1st Floor", type: "junction" },
-
     "room-211":       { coords: [1361, 715], name: "Room 211", floor: "1st Floor" },
     "r211-door":      { coords: [1360, 875], name: "Room 211 Door", floor: "1st Floor", type: "junction" },
-
     "room-212":       { coords: [1771, 740], name: "Room 212", floor: "1st Floor" },
     "r212-door":      { coords: [1766, 876], name: "Room 212 Door", floor: "1st Floor", type: "junction" },
-
-    // --- ROOMS: East Wing (Right Vertical) ---
     "room-216":       { coords: [1945, 877], name: "Room 216", floor: "1st Floor" },
     "r216-door":      { coords: [1993, 974], name: "Room 216 Door", floor: "1st Floor", type: "junction" },
-
     "room-218":       { coords: [2118, 1122], name: "Room 218", floor: "1st Floor" },
     "r218-door":      { coords: [1934, 1117], name: "Room 218 Door", floor: "1st Floor", type: "junction" },
-
     "room-219":       { coords: [2093, 1344], name: "Room 219", floor: "1st Floor" },
     "r219-door":      { coords: [1936, 1345], name: "Room 219 Door", floor: "1st Floor", type: "junction" },
-
     "room-220":       { coords: [2109, 1686], name: "Room 220", floor: "1st Floor" },
     "r220-door":      { coords: [1934, 1686], name: "Room 220 Door", floor: "1st Floor", type: "junction" },
-
     "room-220a":      { coords: [2118, 1968], name: "Room 220-A", floor: "1st Floor" },
     "r220a-door":     { coords: [1938, 1975], name: "Room 220-A Door", floor: "1st Floor", type: "junction" },
-
     "room-221":       { coords: [2112, 2079], name: "Room 221", floor: "1st Floor" },
     "r221-door":      { coords: [1937, 2081], name: "Room 221 Door", floor: "1st Floor", type: "junction" },
-
     "room-222":       { coords: [2111, 2195], name: "Room 222", floor: "1st Floor" },
     "r222-door":      { coords: [1939, 2191], name: "Room 222 Door", floor: "1st Floor", type: "junction" },
-
     "room-223":       { coords: [2103, 2345], name: "Room 223", floor: "1st Floor" },
     "r223-door":      { coords: [1931, 2342], name: "Room 223 Door", floor: "1st Floor", type: "junction" },
-
-    // --- ROOMS: South Hall (Bottom) ---
     "room-224":       { coords: [1955, 2597], name: "Room 224", floor: "1st Floor" },
     "r224-door":      { coords: [1990, 2482], name: "Room 224 Door", floor: "1st Floor", type: "junction" },
-
     "room-225":       { coords: [1770, 2749], name: "Room 225", floor: "1st Floor" },
     "r225-door":      { coords: [1774, 2573], name: "Room 225 Door", floor: "1st Floor", type: "junction" },
-
     "room-226":       { coords: [1550, 2749], name: "Room 226", floor: "1st Floor" },
     "r226-door":      { coords: [1551, 2595], name: "Room 226 Door", floor: "1st Floor", type: "junction" },
-
     "room-227":       { coords: [1177, 2745], name: "Room 227", floor: "1st Floor" },
     "r227-door":      { coords: [1177, 2591], name: "Room 227 Door", floor: "1st Floor", type: "junction" },
-
     "room-228":       { coords: [1072, 2738], name: "Room 228", floor: "1st Floor" },
     "r228-door":      { coords: [1064, 2591], name: "Room 228 Door", floor: "1st Floor", type: "junction" },
-
     "room-229":       { coords: [957, 2748], name: "Room 229", floor: "1st Floor" },
     "r229-door":      { coords: [947, 2588], name: "Room 229 Door", floor: "1st Floor", type: "junction" },
-
     "room-230":       { coords: [611, 2599], name: "Room 230", floor: "1st Floor" },
     "r230-door":      { coords: [714, 2651], name: "Room 230 Door", floor: "1st Floor", type: "junction" },
-    // TEMPORARY ANCHORS (To open maps for mapping)
-    "dev-1st": { coords: [0, 0], name: "Dev 1st Floor", floor: "1st Floor", type: "junction" },
-    "dev-2nd": { coords: [0, 0], name: "Dev 2nd Floor", floor: "2nd Floor", type: "junction" },
+
+    // ==========================================
+    // 2ND FLOOR NODES (COMPLETE)
+    // ==========================================
     "dev-3rd": { coords: [0, 0], name: "Dev 3rd Floor", floor: "3rd Floor", type: "junction" },
+    
+    // Corridor Backbone
+    "f2-hall-start": { coords: [645, 999],  name: "2nd Floor West Wing", floor: "2nd Floor", type: "junction" },
+    "f2-hall-1":     { coords: [789, 812],  name: "2nd Floor Hall 1", floor: "2nd Floor", type: "junction" },
+    "f2-hall-3":     { coords: [1826, 809], name: "2nd Floor Hall 3", floor: "2nd Floor", type: "junction" },
+    "f2-hall-4":     { coords: [1934, 872], name: "2nd Floor Hall 4", floor: "2nd Floor", type: "junction" },
+    "f2-hall-5":     { coords: [2004, 969], name: "2nd Floor East Wing Top", floor: "2nd Floor", type: "junction" },
+    "f2-hall-7":     { coords: [1999, 2408], name: "2nd Floor East Wing Bottom", floor: "2nd Floor", type: "junction" },
+    "f2-hall-8":     { coords: [1852, 2539], name: "2nd Floor South Hall 1", floor: "2nd Floor", type: "junction" },
+    "f2-hall-9":     { coords: [1720, 2567], name: "2nd Floor South Hall 2", floor: "2nd Floor", type: "junction" },
+    "f2-hall-10":    { coords: [792, 2568],  name: "2nd Floor South Hall 3", floor: "2nd Floor", type: "junction" },
+    "f2-hall-end":   { coords: [729, 2448],  name: "2nd Floor South West Corner (Dead End)", floor: "2nd Floor", type: "junction" },
+
+    // West Wing (Left Spine)
+    "room-301b": { coords: [631, 1390], name: "Room 301-B", floor: "2nd Floor" },
+    "room-301a": { coords: [639, 2107], name: "Room 301-A", floor: "2nd Floor" },
+
+    // Rooms 300s (Top)
+    "room-305": { coords: [663, 794], name: "Room 305", floor: "2nd Floor" },
+    "r305-door": { coords: [754, 761], name: "Room 305 Door", floor: "2nd Floor", type: "junction" },
+    "room-306": { coords: [883, 700], name: "Room 306", floor: "2nd Floor" },
+    "r306-door": { coords: [885, 811], name: "Room 306 Door", floor: "2nd Floor", type: "junction" },
+    "room-307": { coords: [997, 712], name: "Room 307", floor: "2nd Floor" },
+    "r307-door": { coords: [995, 810], name: "Room 307 Door", floor: "2nd Floor", type: "junction" },
+    "room-311": { coords: [1121, 921], name: "Room 311", floor: "2nd Floor" },
+    "r311-p1": { coords: [1221, 930], name: "Room 311 Path 1", floor: "2nd Floor", type: "junction" },
+    "r311-p2": { coords: [1214, 875], name: "Room 311 Path 2", floor: "2nd Floor", type: "junction" },
+    "r311-p3": { coords: [1275, 874], name: "Room 311 Path 3", floor: "2nd Floor", type: "junction" },
+    "r311-door": { coords: [1268, 811], name: "Room 311 Door", floor: "2nd Floor", type: "junction" },
+    "room-310": { coords: [1561, 926], name: "Room 310", floor: "2nd Floor" },
+    "r310-p1": { coords: [1420, 924], name: "Room 310 Path 1", floor: "2nd Floor", type: "junction" },
+    "r310-p2": { coords: [1423, 871], name: "Room 310 Path 2", floor: "2nd Floor", type: "junction" },
+    "r310-p3": { coords: [1343, 876], name: "Room 310 Path 3", floor: "2nd Floor", type: "junction" },
+    "r310-door": { coords: [1346, 815], name: "Room 310 Door", floor: "2nd Floor", type: "junction" },
+    "room-308": { coords: [1405, 651], name: "Room 308", floor: "2nd Floor" },
+    "r308-door": { coords: [1413, 813], name: "Room 308 Door", floor: "2nd Floor", type: "junction" },
+    "room-309": { coords: [1826, 710], name: "Room 309", floor: "2nd Floor" }, 
+    
+    // Rooms 300s (Right)
+    "room-313": { coords: [2009, 831], name: "Room 313", floor: "2nd Floor" },
+    "r313-door": { coords: [2062, 923], name: "Room 313 Door", floor: "2nd Floor", type: "junction" },
+    "room-315": { coords: [2170, 1104], name: "Room 315", floor: "2nd Floor" },
+    "r315-door": { coords: [2006, 1094], name: "Room 315 Door", floor: "2nd Floor", type: "junction" },
+    "room-316": { coords: [2142, 1425], name: "Room 316", floor: "2nd Floor" },
+    "r316-door": { coords: [1999, 1431], name: "Room 316 Door", floor: "2nd Floor", type: "junction" },
+    "room-317": { coords: [2141, 1958], name: "Room 317", floor: "2nd Floor" },
+    "r317-door": { coords: [2000, 1959], name: "Room 317 Door", floor: "2nd Floor", type: "junction" },
+    "room-318": { coords: [2142, 2347], name: "Room 318 (A/B)", floor: "2nd Floor" },
+    "r318-door": { coords: [2000, 2346], name: "Room 318 Door", floor: "2nd Floor", type: "junction" },
+    "room-319": { coords: [2010, 2551], name: "Room 319", floor: "2nd Floor" },
+    "r319-door": { coords: [2054, 2459], name: "Room 319 Door", floor: "2nd Floor", type: "junction" },
+
+    // Rooms 300s (Bottom)
+    "room-330": { coords: [1714, 2469], name: "Room 330", floor: "2nd Floor" }, // At Hall 9
+    "room-320": { coords: [1826, 2732], name: "Room 320", floor: "2nd Floor" },
+    "r320-door": { coords: [1830, 2544], name: "Room 320 Door", floor: "2nd Floor", type: "junction" },
+    "room-321": { coords: [1600, 2717], name: "Room 321", floor: "2nd Floor" },
+    "r321-door": { coords: [1602, 2567], name: "Room 321 Door", floor: "2nd Floor", type: "junction" },
+    "room-329": { coords: [1484, 2461], name: "Room 329", floor: "2nd Floor" },
+    "r329-door": { coords: [1487, 2568], name: "Room 329 Door", floor: "2nd Floor", type: "junction" },
+    "room-328": { coords: [1373, 2463], name: "Room 328", floor: "2nd Floor" },
+    "r328-door": { coords: [1378, 2568], name: "Room 328 Door", floor: "2nd Floor", type: "junction" },
+    "room-322": { coords: [1217, 2727], name: "Room 322", floor: "2nd Floor" },
+    "r322-door": { coords: [1214, 2568], name: "Room 322 Door", floor: "2nd Floor", type: "junction" },
+    "room-323": { coords: [1103, 2726], name: "Room 323", floor: "2nd Floor" },
+    "r323-door": { coords: [1100, 2567], name: "Room 323 Door", floor: "2nd Floor", type: "junction" },
+    "room-327": { coords: [922, 2451], name: "Room 327", floor: "2nd Floor" },
+    "r327-door": { coords: [920, 2567], name: "Room 327 Door", floor: "2nd Floor", type: "junction" },
+    "room-324": { coords: [819, 2728], name: "Room 324", floor: "2nd Floor" },
+    "r324-door": { coords: [819, 2568], name: "Room 324 Door", floor: "2nd Floor", type: "junction" }, 
+    "room-325": { coords: [662, 2579], name: "Room 325", floor: "2nd Floor" },
+    "r325-door": { coords: [741, 2624], name: "Room 325 Door", floor: "2nd Floor", type: "junction" },
 };
 
 // ==========================================
 // 2. DEFINE CONNECTIONS
 // ==========================================
 const indoorGraph = {
-    // --------------------------------------
-    // GROUND FLOOR CONNECTIONS
-    // --------------------------------------
+    // GROUND FLOOR (Unchanged)
     "ent-1-out": { neighbors: { "ent-1-in": 360 } },
     "ent-1-in":  { neighbors: { "ent-1-out": 360, "hall-110": 200 } }, 
     "ent-2-out": { neighbors: { "ent-2-in": 240 } },
@@ -273,11 +292,11 @@ const indoorGraph = {
     "junc-center-1": { neighbors: { "hall-111": 310, "hall-114": 115 } },
     "hall-114":      { neighbors: { "junc-center-1": 115, "junc-center-2": 60, "r114-door": 160 } },
     "junc-center-2": { neighbors: { "hall-114": 60, "junc-center-3": 100 } },
-    "junc-center-3": { neighbors: { "junc-center-2": 100, "hall-115": 60 } },
+    "junc-center-3": { neighbors: { "junc-center-2": 100, "hall-115": 60, "stair-4-G": 180 } },
     "hall-115":      { neighbors: { "junc-center-3": 60,  "hall-116": 110, "r115-door": 80 } },
     "hall-116":      { neighbors: { "hall-115": 110,      "hall-120": 320, "r116-door": 85 } },
     "hall-120":      { neighbors: { "hall-116": 320,      "hall-118": 475, "conn-119-120": 70, "r117-path": 50 } }, 
-    "hall-118":      { neighbors: { "hall-120": 475,      "junc-center-4": 30, "room-118": 95 } },
+    "hall-118":      { neighbors: { "hall-120": 475,      "junc-center-4": 30, "room-118": 95, "stair-1-G": 140 } },
     "junc-center-4": { neighbors: { "hall-118": 30,       "junc-center-5": 150 } },
     "junc-center-5": { neighbors: { "junc-center-4": 150, "hall-121": 80 } },
     "hall-121":      { neighbors: { "junc-center-5": 80,  "hall-106": 60, "r121-path": 70 } },
@@ -288,7 +307,7 @@ const indoorGraph = {
     "hall-124":      { neighbors: { "hall-123": 490,      "hall-125": 120, "room-124": 105 } },
     "hall-125":      { neighbors: { "hall-124": 120,      "hall-126": 100, "room-125": 110 } },
     "hall-126":      { neighbors: { "hall-125": 100,      "junc-south-1": 260, "room-126": 160 } },
-    "junc-south-2":  { neighbors: { "ent-3-in": 100, "hall-139": 65 } },
+    "junc-south-2":  { neighbors: { "ent-3-in": 100, "hall-139": 65, "stair-2-G": 170 } },
     "hall-139":      { neighbors: { "junc-south-2": 65, "hall-128": 140, "room-139": 110 } },
     "hall-128":      { neighbors: { "hall-139": 140,    "hall-138": 80,  "room-128": 145 } },
     "hall-138":      { neighbors: { "hall-128": 80,     "hall-129": 170, "room-138": 105 } },
@@ -297,7 +316,7 @@ const indoorGraph = {
     "hall-137":      { neighbors: { "hall-131": 65,     "hall-130": 55,  "room-137": 110 } },
     "hall-130":      { neighbors: { "hall-137": 55,     "hall-136": 170, "room-130": 100 } },
     "hall-136":      { neighbors: { "hall-130": 170,    "hall-132": 120, "room-136": 120 } },
-    "hall-132":      { neighbors: { "hall-136": 120,    "hall-135": 65,  "room-132": 150 } },
+    "hall-132":      { neighbors: { "hall-136": 120,    "hall-135": 65,  "room-132": 150, "stair-3-G": 200 } }, 
     "hall-135":      { neighbors: { "hall-132": 65,     "ent-2-in": 30,  "room-135": 110, "junc-spine-right": 150 } },
     "junc-south-1":  { neighbors: { "hall-126": 260, "ent-3-in": 150, "r127-path": 60 } },
     "r127-path":     { neighbors: { "junc-south-1": 60, "room-127": 120 } },
@@ -350,129 +369,180 @@ const indoorGraph = {
     "room-119-inner": { neighbors: { "r119-door": 50, "room-119": 120 } },
     "room-119": { neighbors: { "room-119-inner": 120 } },
 
-    // --------------------------------------
+    // STAIRS
+    "stair-1-G": { neighbors: { "hall-118": 140, "stair-1-mid": 50 } },
+    "stair-1-mid": { neighbors: { "stair-1-G": 50, "stair-1-1F": 50 } },
+    "stair-1-1F": { neighbors: { "stair-1-mid": 50, "r212-door": 100 } }, 
+    "stair-2-G": { neighbors: { "junc-south-2": 170, "stair-2-mid": 50 } },
+    "stair-2-mid": { neighbors: { "stair-2-G": 50, "r225-door": 50 } }, 
+    "stair-3-G": { neighbors: { "hall-132": 200, "stair-3-mid": 50 } },
+    "stair-3-mid": { neighbors: { "stair-3-G": 50, "stair-3-1F": 50 } },
+    "stair-3-1F": { neighbors: { "stair-3-mid": 50, "f1-hall-9": 100 } }, 
+    "stair-4-G": { neighbors: { "junc-center-3": 180, "stair-4-mid": 50 } },
+    "stair-4-mid": { neighbors: { "stair-4-G": 50, "stair-4-1F": 50 } },
+    "stair-4-1F": { neighbors: { "stair-4-mid": 50, "r209-door": 80 } },
+
     // 1ST FLOOR CONNECTIONS
-    // --------------------------------------
-
-    // Left Vertical Chain (West Wing) - Top to Bottom
-    "f1-hall-start": { neighbors: { "room-207": 120, "r206-door": 98 } },
+    "f1-hall-start": { neighbors: { "f1-hall-1": 209, "f1-hall-end": 1333, "room-207": 120 } },
     "room-207":      { neighbors: { "f1-hall-start": 120 } },
-
     "r206-door":     { neighbors: { "f1-hall-start": 98, "room-206": 140, "r204-corr": 320 } },
     "room-206":      { neighbors: { "r206-door": 140 } },
-
-    // The Complex Branch (203/204/205)
     "r204-corr":     { neighbors: { "r206-door": 320, "r204-pass-1": 68, "r202-door": 528 } },
-    
     "r204-pass-1":   { neighbors: { "r204-corr": 68, "room-205": 137, "r204-pass-2": 57 } },
     "room-205":      { neighbors: { "r204-pass-1": 137 } },
-
     "r204-pass-2":   { neighbors: { "r204-pass-1": 57, "room-203": 76, "r204-pass-3": 52 } },
     "room-203":      { neighbors: { "r204-pass-2": 76 } },
-
     "r204-pass-3":   { neighbors: { "r204-pass-2": 52, "room-204": 79 } },
     "room-204":      { neighbors: { "r204-pass-3": 79 } },
-
     "r202-door":     { neighbors: { "r204-corr": 528, "room-202": 132, "r201-door": 302 } },
     "room-202":      { neighbors: { "r202-door": 132 } },
-
     "r201-door":     { neighbors: { "r202-door": 302, "room-201": 132, "f1-hall-end": 79 } },
     "room-201":      { neighbors: { "r201-door": 132 } },
-
-    // Top Chain Sequence
-    "f1-hall-start": { neighbors: { "f1-hall-1": 209, "f1-hall-end": 1333, "room-207": 120 } }, // Merged Left Chain connection
-    
+    "f1-hall-start": { neighbors: { "f1-hall-1": 209, "f1-hall-end": 1333, "room-207": 120 } }, 
     "f1-hall-1":     { neighbors: { "f1-hall-start": 209, "r209-door": 135, "r208-path": 113 } },
-    
-    // Room 208
     "r208-path":     { neighbors: { "f1-hall-1": 113, "room-208": 106 } },
     "room-208":      { neighbors: { "r208-path": 106 } },
-
-    "r209-door":     { neighbors: { "f1-hall-1": 135, "room-209": 120, "f1-hall-2": 40 } },
+    "r209-door":     { neighbors: { "f1-hall-1": 135, "room-209": 120, "f1-hall-2": 40, "stair-4-1F": 80 } }, 
     "room-209":      { neighbors: { "r209-door": 120 } },
-
     "f1-hall-2":     { neighbors: { "r209-door": 40,  "r210-door": 75 } },
-
     "r210-door":     { neighbors: { "f1-hall-2": 75,  "room-210": 100, "r214-door": 270 } },
     "room-210":      { neighbors: { "r210-door": 100 } },
-
     "r214-door":     { neighbors: { "r210-door": 270, "r214-p3": 55,   "r213-door": 70 } },
     "r214-p3":       { neighbors: { "r214-door": 55, "r214-p2": 68 } },
     "r214-p2":       { neighbors: { "r214-p3": 68, "r214-p1": 52 } },
     "r214-p1":       { neighbors: { "r214-p2": 52, "room-214": 117 } },
     "room-214":      { neighbors: { "r214-p1": 117 } },
-
     "r213-door":     { neighbors: { "r214-door": 70,  "r213-p3": 55,   "r211-door": 60 } },
     "r213-p3":       { neighbors: { "r213-door": 55, "r213-p2": 65 } },
     "r213-p2":       { neighbors: { "r213-p3": 65, "r213-p1": 44 } },
     "r213-p1":       { neighbors: { "r213-p2": 44, "room-213": 167 } },
     "room-213":      { neighbors: { "r213-p1": 167 } },
-
     "r211-door":     { neighbors: { "r213-door": 60,  "room-211": 160, "r212-door": 400 } },
     "room-211":      { neighbors: { "r211-door": 160 } },
-
-    "r212-door":     { neighbors: { "r211-door": 400, "room-212": 135, "f1-hall-3": 45 } },
+    "r212-door":     { neighbors: { "r211-door": 400, "room-212": 135, "f1-hall-3": 45, "stair-1-1F": 100 } }, 
     "room-212":      { neighbors: { "r212-door": 135 } },
-
     "f1-hall-3":     { neighbors: { "r212-door": 45,  "f1-hall-4": 85 } },
     "f1-hall-4":     { neighbors: { "f1-hall-3": 85,  "f1-hall-5": 105 } },
-
-    // Right Vertical Chain (East Wing)
     "r216-door":     { neighbors: { "room-216": 120, "f1-hall-5": 60 } },
     "room-216":      { neighbors: { "r216-door": 120 } },
-
     "f1-hall-5":     { neighbors: { "f1-hall-4": 105, "r216-door": 60, "r218-door": 105 } },
-
     "r218-door":     { neighbors: { "f1-hall-5": 105, "room-218": 185, "r219-door": 230 } },
     "room-218":      { neighbors: { "r218-door": 185 } },
-
     "r219-door":     { neighbors: { "r218-door": 230, "room-219": 160, "r220-door": 340 } },
     "room-219":      { neighbors: { "r219-door": 160 } },
-
     "r220-door":     { neighbors: { "r219-door": 340, "room-220": 175, "r220a-door": 290 } },
     "room-220":      { neighbors: { "r220-door": 175 } },
-
     "r220a-door":    { neighbors: { "r220-door": 290, "room-220a": 180, "r221-door": 105 } },
     "room-220a":     { neighbors: { "r220a-door": 180 } },
-
     "r221-door":     { neighbors: { "r220a-door": 105, "room-221": 175, "r222-door": 110 } },
     "room-221":      { neighbors: { "r221-door": 175 } },
-
     "r222-door":     { neighbors: { "r221-door": 110, "room-222": 175, "r223-door": 150 } },
     "room-222":      { neighbors: { "r222-door": 175 } },
-
     "r223-door":     { neighbors: { "r222-door": 150, "room-223": 175, "f1-hall-7": 100 } },
     "room-223":      { neighbors: { "r223-door": 175 } },
-
-    // Bottom Chain
     "f1-hall-7":     { neighbors: { "r223-door": 100, "r224-door": 55, "r225-door": 216 } },
-
     "r224-door":     { neighbors: { "f1-hall-7": 55, "room-224": 115 } },
     "room-224":      { neighbors: { "r224-door": 115 } },
-
-    "r225-door":     { neighbors: { "f1-hall-7": 216, "room-225": 175, "f1-hall-8": 50 } },
+    "r225-door":     { neighbors: { "f1-hall-7": 216, "room-225": 175, "f1-hall-8": 50, "stair-2-mid": 50 } }, 
     "room-225":      { neighbors: { "r225-door": 175 } },
-
     "f1-hall-8":     { neighbors: { "r225-door": 50,  "r226-door": 200 } },
-
     "r226-door":     { neighbors: { "f1-hall-8": 200, "room-226": 155, "r227-door": 370 } },
     "room-226":      { neighbors: { "r226-door": 155 } },
-
     "r227-door":     { neighbors: { "r226-door": 370, "room-227": 155, "r228-door": 115 } },
     "room-227":      { neighbors: { "r227-door": 155 } },
-
     "r228-door":     { neighbors: { "r227-door": 115, "room-228": 150, "r229-door": 115 } },
     "room-228":      { neighbors: { "r228-door": 150 } },
-
     "r229-door":     { neighbors: { "r228-door": 115, "room-229": 160, "f1-hall-9": 200 } },
     "room-229":      { neighbors: { "r229-door": 160 } },
-
-    "f1-hall-9":     { neighbors: { "r229-door": 200, "r230-door": 65, "f1-hall-end": 220 } },
-
+    "f1-hall-9":     { neighbors: { "r229-door": 200, "r230-door": 65, "f1-hall-end": 220, "stair-3-1F": 100 } }, 
     "r230-door":     { neighbors: { "f1-hall-9": 65,  "room-230": 115 } }, 
     "room-230":      { neighbors: { "r230-door": 115 } },
+    "f1-hall-end":   { neighbors: { "f1-hall-9": 220, "r201-door": 79 } },
 
-    "f1-hall-end":   { neighbors: { "f1-hall-9": 220, "r201-door": 79 } } // CONNECTS BACK TO LEFT SPINE!
+    // ==========================================
+    // 2ND FLOOR CONNECTIONS (COMPLETE)
+    // ==========================================
+    "f2-hall-start": { neighbors: { "f2-hall-1": 230, "room-301b": 395 } },
+    "room-301b":     { neighbors: { "f2-hall-start": 395, "room-301a": 717 } },
+    "room-301a":     { neighbors: { "room-301b": 717 } }, // DEAD END - Loop Broken
+    
+    "f2-hall-1":     { neighbors: { "f2-hall-start": 230, "r305-door": 60, "r306-door": 100 } },
+    "r305-door":     { neighbors: { "f2-hall-1": 60, "room-305": 95 } },
+    "room-305":      { neighbors: { "r305-door": 95 } },
+
+    "r306-door":     { neighbors: { "f2-hall-1": 100, "room-306": 110, "r307-door": 110 } },
+    "room-306":      { neighbors: { "r306-door": 110 } },
+    "r307-door":     { neighbors: { "r306-door": 110, "room-307": 100, "r311-door": 270 } },
+    "room-307":      { neighbors: { "r307-door": 100 } },
+    "r311-door":     { neighbors: { "r307-door": 270, "r311-p3": 60, "r310-door": 80 } },
+    "r311-p3":       { neighbors: { "r311-door": 60, "r311-p2": 60 } },
+    "r311-p2":       { neighbors: { "r311-p3": 60, "r311-p1": 55 } },
+    "r311-p1":       { neighbors: { "r311-p2": 55, "room-311": 100 } },
+    "room-311":      { neighbors: { "r311-p1": 100 } },
+    "r310-door":     { neighbors: { "r311-door": 80, "r310-p3": 60, "r308-door": 70 } },
+    "r310-p3":       { neighbors: { "r310-door": 60, "r310-p2": 80 } },
+    "r310-p2":       { neighbors: { "r310-p3": 80, "r310-p1": 50 } },
+    "r310-p1":       { neighbors: { "r310-p2": 50, "room-310": 140 } },
+    "room-310":      { neighbors: { "r310-p1": 140 } },
+    "r308-door":     { neighbors: { "r310-door": 70, "room-308": 160, "f2-hall-3": 410 } },
+    "room-308":      { neighbors: { "r308-door": 160 } },
+    "f2-hall-3":     { neighbors: { "r308-door": 410, "room-309": 100, "f2-hall-4": 120 } },
+    "room-309":      { neighbors: { "f2-hall-3": 100 } },
+    "f2-hall-4":     { neighbors: { "f2-hall-3": 120, "f2-hall-5": 110 } },
+    
+    // East Wing (Right Vertical)
+    "f2-hall-5":     { neighbors: { "f2-hall-4": 110, "r313-door": 90, "r315-door": 90 } }, 
+    "r313-door":     { neighbors: { "f2-hall-5": 90, "room-313": 100 } },
+    "room-313":      { neighbors: { "r313-door": 100 } },
+    
+    "r315-door":     { neighbors: { "f2-hall-5": 90, "room-315": 165, "r316-door": 330 } },
+    "room-315":      { neighbors: { "r315-door": 165 } },
+    "r316-door":     { neighbors: { "r315-door": 330, "room-316": 145, "r317-door": 530 } },
+    "room-316":      { neighbors: { "r316-door": 145 } },
+    "r317-door":     { neighbors: { "r316-door": 530, "room-317": 140, "r318-door": 380 } },
+    "room-317":      { neighbors: { "r317-door": 140 } },
+    "r318-door":     { neighbors: { "r317-door": 380, "room-318": 140, "f2-hall-7": 60 } },
+    "room-318":      { neighbors: { "r318-door": 140 } },
+    
+    // South East Corner (Direct Connection)
+    "f2-hall-7":     { neighbors: { "r318-door": 60, "r319-door": 70, "f2-hall-8": 150 } }, 
+    "r319-door":     { neighbors: { "f2-hall-7": 70, "room-319": 100 } }, 
+    "room-319":      { neighbors: { "r319-door": 100 } },
+
+    // Bottom Chain (Full Sequence)
+    "f2-hall-8":     { neighbors: { "f2-hall-7": 150, "r320-door": 30 } },
+    "r320-door":     { neighbors: { "f2-hall-8": 30, "room-320": 190, "f2-hall-9": 110 } },
+    "room-320":      { neighbors: { "r320-door": 190 } },
+
+    "f2-hall-9":     { neighbors: { "r320-door": 110, "room-330": 6, "r321-door": 120 } }, 
+    "room-330":      { neighbors: { "f2-hall-9": 6 } },
+
+    "r321-door":     { neighbors: { "f2-hall-9": 120, "room-321": 150, "r329-door": 115 } },
+    "room-321":      { neighbors: { "r321-door": 150 } },
+
+    "r329-door":     { neighbors: { "r321-door": 115, "room-329": 105, "r328-door": 110 } },
+    "room-329":      { neighbors: { "r329-door": 105 } },
+
+    "r328-door":     { neighbors: { "r329-door": 110, "room-328": 105, "r322-door": 160 } },
+    "room-328":      { neighbors: { "r328-door": 105 } },
+
+    "r322-door":     { neighbors: { "r328-door": 160, "room-322": 155, "r323-door": 110 } },
+    "room-322":      { neighbors: { "r322-door": 155 } },
+
+    "r323-door":     { neighbors: { "r322-door": 110, "room-323": 155, "r327-door": 180 } },
+    "room-323":      { neighbors: { "r323-door": 155 } },
+
+    "r327-door":     { neighbors: { "r323-door": 180, "room-327": 115, "r324-door": 100 } },
+    "room-327":      { neighbors: { "r327-door": 115 } },
+
+    "r324-door":     { neighbors: { "r327-door": 100, "room-324": 160, "f2-hall-10": 30 } },
+    "room-324":      { neighbors: { "r324-door": 160 } },
+
+    // South West Corner (Dead End)
+    "f2-hall-10":    { neighbors: { "r324-door": 30, "r325-door": 75, "f2-hall-end": 150 } },
+    "r325-door":     { neighbors: { "f2-hall-10": 75, "room-325": 90 } }, 
+    "room-325":      { neighbors: { "r325-door": 90 } },
+    "f2-hall-end":   { neighbors: { "f2-hall-10": 150 } } 
 };
 
 window.indoorNodes = indoorNodes;
