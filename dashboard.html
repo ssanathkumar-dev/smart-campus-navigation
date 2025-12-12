@@ -150,12 +150,12 @@
 
             <div class="input-group">
                 <label for="indoorStartInput">Your Location (Start)</label>
-                <input type="text" id="indoorStartInput" placeholder="e.g. Main Entrance" autocomplete="off">
+                <input type="text" id="indoorStartInput" placeholder="e.g. Room 101" autocomplete="off">
             </div>
 
             <div class="input-group">
                 <label for="indoorEndInput">Room Number (Destination)</label>
-                <input type="text" id="indoorEndInput" placeholder="e.g. Room 119" autocomplete="off">
+                <input type="text" id="indoorEndInput" placeholder="e.g. Room 205" autocomplete="off">
             </div>
 
             <button onclick="navigateIndoor()" class="btn-go secondary">Find Indoor Route</button>
@@ -206,7 +206,21 @@
             window.location.href = `map.html?start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}`;
         }
 
-        // 2. Indoor Navigation Logic (New)
+        // --- Helper: Determine Floor from Room Number ---
+        function getFloorFromRoom(roomStr) {
+            const match = roomStr.match(/\d+/);
+            if (match) {
+                const roomNum = parseInt(match[0]);
+                if (roomNum >= 100 && roomNum <= 199) return "Ground Floor";
+                if (roomNum >= 200 && roomNum <= 299) return "1st Floor";
+                if (roomNum >= 300 && roomNum <= 399) return "2nd Floor";
+                // Added 4xx logic
+                if (roomNum >= 400 && roomNum <= 499) return "3rd Floor"; 
+            }
+            return null;
+        }
+
+        // 2. Indoor Navigation Logic
         function navigateIndoor() {
             const building = buildingSelect.value;
             const start = document.getElementById('indoorStartInput').value;
@@ -221,8 +235,16 @@
                 return;
             }
 
-            // We send new parameters: 'indoorStart' and 'indoorEnd'
-            // Example: map.html?building=Main Building&indoorStart=Entrance&indoorEnd=Room 119
+            const startFloor = getFloorFromRoom(start);
+            const endFloor = getFloorFromRoom(end);
+
+            // --- CHECK: Are they on different floors? ---
+            if (startFloor && endFloor && startFloor !== endFloor) {
+                alert(`Please proceed to ${endFloor} to continue navigation.`);
+                return; // <--- STOP EXECUTION HERE. Do not redirect.
+            }
+
+            // Only executes if floors are same or unknown
             const url = `map.html?building=${encodeURIComponent(building)}&indoorStart=${encodeURIComponent(start)}&indoorEnd=${encodeURIComponent(end)}`;
             window.location.href = url;
         }
