@@ -185,7 +185,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ==========================================
-    // 5. INDOOR NAVIGATION (DEV MODE)
+    // 5. INDOOR NAVIGATION (PRODUCTION MODE)
     // ==========================================
 
     window.enterBuilding = function(buildingName, floorName) {
@@ -194,11 +194,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const target = campusData.find(b => b.name === buildingName);
         if (!target || !target.indoorMap) { alert("No indoor map data found."); return; }
 
-        // Logic to ensure we don't accidentally get 'undefined'
         const selectedFloor = floorName || "Ground Floor";
         window.currentFloorName = selectedFloor; 
 
-        // CRITICAL DEBUGGING LOGS
         console.log(`Step 2: Selected Floor is "${selectedFloor}"`);
         
         const floorData = target.indoorMap[selectedFloor];
@@ -209,7 +207,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        console.log(`Step 3: Loading Image -> ${floorData.image}`); // <--- CHECK THIS IN CONSOLE!
+        console.log(`Step 3: Loading Image -> ${floorData.image}`);
 
         // Clear old layers
         poiLayerGroup.clearLayers();
@@ -221,38 +219,12 @@ document.addEventListener('DOMContentLoaded', function() {
         window.currentIndoorLayer = L.imageOverlay(floorData.image, floorData.bounds).addTo(map);
         map.fitBounds(floorData.bounds);
 
-        loadIndoorMarkers(selectedFloor);
         addExitButton();
-        window.showBlueLines(); 
-    };
-
-    function loadIndoorMarkers(floorName) {
-        indoorLayerGroup.clearLayers();
         
-        if (typeof indoorNodes !== 'undefined') {
-            Object.keys(indoorNodes).forEach(nodeId => {
-                const node = indoorNodes[nodeId];
-                if (node.floor === floorName) { 
-                    
-                    // VISIBLE DOTS
-                    const marker = L.circleMarker(node.coords, {
-                        radius: 8, color: '#2563eb', fillColor: '#60a5fa', fillOpacity: 0.8, weight: 1             
-                    });
-
-                    // POPUP SHOWS NAME (For Debugging)
-                    marker.bindPopup(`<b>${node.name}</b><br><span style="font-size:0.8em; color:gray;">ID: ${nodeId}</span>`);
-
-                    // Click Handler (Routing)
-                    marker.on('click', function() {
-                        handleIndoorClick(nodeId, marker);
-                    });
-                    
-                    indoorLayerGroup.addLayer(marker);
-                }
-            });
-            indoorLayerGroup.addTo(map);
-        }
-    }
+        // --- PRODUCTION MODE: DEV TOOLS DISABLED ---
+        // loadIndoorMarkers(selectedFloor); 
+        // window.showBlueLines(); 
+    };
 
     function addExitButton() {
         if(document.getElementById('exit-btn')) return;
@@ -268,48 +240,30 @@ document.addEventListener('DOMContentLoaded', function() {
     let indoorStart = null;
     let indoorEnd = null;
 
-    function handleIndoorClick(nodeId, marker) {
-        marker.openPopup(); // Show name
-
-        if (!indoorStart || (indoorStart && indoorEnd)) {
-            resetIndoorState();
-            indoorStart = nodeId;
-            marker.setStyle({ fillColor: '#10b981', color: '#059669' }); // Green
-            speakDirections(`Start: ${indoorNodes[nodeId].name}`);
-        } else if (!indoorEnd && nodeId !== indoorStart) {
-            indoorEnd = nodeId;
-            marker.setStyle({ fillColor: '#ef4444', color: '#b91c1c' }); // Red
-            checkIndoorRoute();
-        }
-    }
-
-    function resetIndoorState() {
-        indoorStart = null;
-        indoorEnd = null;
-        indoorLayerGroup.eachLayer(layer => {
-            if (layer instanceof L.Polyline && !(layer instanceof L.CircleMarker)) { 
-                 indoorLayerGroup.removeLayer(layer); 
-            }
-            if (layer instanceof L.CircleMarker) { 
-                layer.setStyle({ fillColor: '#60a5fa', color: '#2563eb' }); // Reset Blue
-            }
-        });
-        window.showBlueLines();
-    }
-
     function checkIndoorRoute() {
         if (!indoorStart || !indoorEnd) return;
 
         const pathIds = findIndoorPath(indoorStart, indoorEnd);
         if (!pathIds) { alert("No path found inside building!"); return; }
 
+        // 1. Draw Path
         const routeCoords = pathIds.map(id => indoorNodes[id].coords);
         L.polyline(routeCoords, {
             color: '#2563eb', weight: 6, opacity: 0.9, dashArray: '10, 10', className: 'walking-path' 
         }).addTo(indoorLayerGroup);
         
+        // 2. Add START Marker (Green)
         const startNode = indoorNodes[indoorStart];
+        L.circleMarker(startNode.coords, { 
+            radius: 8, color: 'white', fillColor: '#10b981', fillOpacity: 1 
+        }).addTo(indoorLayerGroup).bindPopup("Start: " + startNode.name);
+
+        // 3. Add END Marker (Red)
         const endNode = indoorNodes[indoorEnd];
+        L.circleMarker(endNode.coords, { 
+            radius: 8, color: 'white', fillColor: '#ef4444', fillOpacity: 1 
+        }).addTo(indoorLayerGroup).bindPopup("End: " + endNode.name).openPopup();
+
         speakDirections(`Navigating from ${startNode.name} to ${endNode.name}.`);
     }
 
@@ -355,23 +309,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return null;
     }
 
-    // --- DEBUG TOOL: SHOW ALL CONNECTIONS ---
-    window.showBlueLines = function() {
-        Object.keys(indoorGraph).forEach(nodeId => {
-            const nodeA = indoorNodes[nodeId];
-            const neighbors = indoorGraph[nodeId].neighbors;
-            Object.keys(neighbors).forEach(neighborId => {
-                const nodeB = indoorNodes[neighborId];
-                if (!nodeA || !nodeB) return;
-                if (nodeA.floor === window.currentFloorName && nodeB.floor === window.currentFloorName) {
-                    L.polyline([nodeA.coords, nodeB.coords], {
-                        color: '#3b82f6', weight: 1, opacity: 0.5, dashArray: '5, 5', interactive: false 
-                    }).addTo(indoorLayerGroup);
-                }
-            });
-        });
-    };
-
     function findIndoorNodeIdByName(searchTerm) {
         if (!searchTerm || typeof indoorNodes === 'undefined') return null;
         const lowerTerm = searchTerm.toLowerCase().trim();
@@ -381,15 +318,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // --- CLICK TOOL (CONSOLE ONLY - NO POPUP) ---
+    // --- CLICK TOOL (CONSOLE ONLY) ---
     map.on('click', function(e) {
         var coord = Math.round(e.latlng.lat) + ", " + Math.round(e.latlng.lng);
         console.log("Clicked Coordinates:", coord); 
-        // alert(coord);  <-- REMOVED POPUP
     });
 
-// ==========================================
-    // 7. INITIALIZATION & EVENTS (CORRECTED)
+    // ==========================================
+    // 7. INITIALIZATION & EVENTS (PRIORITY LOGIC)
     // ==========================================
     
     const urlParams = new URLSearchParams(window.location.search);
