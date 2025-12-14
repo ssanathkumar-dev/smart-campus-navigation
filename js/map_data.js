@@ -120,22 +120,20 @@ const campusGraph = {
         coords: [2014, 1817],
         neighbors: {
             "road-node-04": 118,      
-            "road-node-05-turn": 364, // Forward to Turn
             "parking-a-entrance": 121,
-            "node-hostel-path-1": 144
+            "node-hostel-path-1": 144 // <--- CONNECTED
+            // DELETED: "road-node-05-turn": 364 (Cut off main road)
         }
     },
-
-    // The Intermediate Turn (Connecting 05 to 06)
     "road-node-05-turn": {
-        coords: [1889, 1475], 
-        neighbors: {
-            "road-node-05": 364, // Back to Parking
-            "road-node-06": 273, // Forward to Food Court
-            "library-entrance": 91,
-            "node-maths-path-1": 237
-        }
-    },
+            coords: [1889, 1475], 
+            neighbors: { 
+                "road-node-06": 273, 
+                "library-entrance": 91,
+                "node-maths-path-1": 237,
+                "node-hostel-path-1": 145 // <--- NEW CONNECTION
+            }
+        },
 
     "road-node-06": {
         coords: [1619, 1518], 
@@ -195,10 +193,13 @@ const campusGraph = {
         neighbors: { "node-basketball-turn": 122, "basketball-entrance": 178 }
     },
 
-    // 4. Boys Hostel Path
     "node-hostel-path-1": {
         coords: [1935, 1612],
-        neighbors: { "road-node-05": 144, "node-hostel-path-2": 161 }
+        neighbors: { 
+            "node-hostel-path-2": 161, // To Boys Hostel
+            "road-node-05-turn": 145,  // To Main Building
+            "road-node-05": 144        // To GYM / Parking (This was missing!)
+        }
     },
     "node-hostel-path-2": {
         coords: [1782, 1662],

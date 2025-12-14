@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let routeLayerGroup = L.layerGroup().addTo(map);
     let poiLayerGroup = L.layerGroup().addTo(map);
     let indoorLayerGroup = L.layerGroup().addTo(map); 
+    let debugLayerGroup = L.layerGroup().addTo(map); // For Outdoor Debug Lines
 
     // ==========================================
     // 2. HELPER FUNCTIONS
@@ -66,13 +67,16 @@ document.addEventListener('DOMContentLoaded', function() {
         marker.bindPopup(`<b>${building.name}</b>`);
     }
     
-    // LOAD OUTDOOR MARKERS
+    // LOAD OUTDOOR MARKERS & DEBUG GRAPH
     if (typeof campusData !== 'undefined' && campusData.length > 0) {
         map.fitBounds(bounds); 
         campusData.forEach(building => {
             if (building.name === "Main Building") return; 
             addPoiMarker(building); 
         });
+
+        // --- ENABLE OUTDOOR DEBUG VIEW ---
+        showOutdoorGraph(); 
     }
 
     // ==========================================
@@ -140,20 +144,60 @@ document.addEventListener('DOMContentLoaded', function() {
     function findNodeIdByName(locationName) {
         if (!locationName) return null;
         const lowerInput = locationName.toLowerCase();
+        
+        // 1. Try to find the object in campusData first
         const poi = campusData.find(item => item.name.toLowerCase().includes(lowerInput));
-        if (!poi) return null; 
+        
+        // If we found a POI object, use its exact name for the mapping lookup
+        // If not (user typed partial name), use the input string
+        const lookupName = poi ? poi.name.toLowerCase() : lowerInput;
 
+        // 2. EXPLICIT MAPPINGS (The Dictionary)
+        // Map "Display Name" -> "Graph Node ID"
         const mappings = {
+            // Hostels & Sports
             "girls hostel": "hostel-g-entrance",
+            "boys hostel block": "hostel-b-entrance",
             "gym": "gym-entrance",
+            "basketball ground": "basketball-entrance",
+            
+            // Academic & Admin
             "mitm school area": "school-area-entrance",
+            "mitm school play area": "school-play-entrance",
             "main building": "main-building-entrance",
-            "canteen": "canteen-entrance"
+            "college library": "library-entrance",
+            "maths department": "maths-dept-entrance",
+            "ayurveda building": "ayurveda-entrance",
+            "mba, mca block": "mba-mca-entrance",
+            "bca bba block": "bca-bba-entrance",
+            "auditorium": "auditorium-entrance",
+            
+            // Utilities
+            "parking lot a": "parking-a-entrance",
+            "canteen": "canteen-entrance",
+
+            // Food Court / Stalls (These were likely failing before)
+            "mitm juice stall": "juice-stall",
+            "mitm store": "mitm-store",
+            "mitm bakery": "mitm-bakery",
+            "mitm chats": "mitm-chats",
+            "mitm ice cream": "mitm-icecream",
+            "main auditorium": "auditorium-main",
+            "mitm rolls": "mitm-rolls",
+            "mitm fruits": "mitm-fruits",
+            "mitm corns": "mitm-corns"
         };
         
-        if (mappings[poi.name.toLowerCase()]) return mappings[poi.name.toLowerCase()];
-        const nodeId = poi.name.toLowerCase().replace(/ /g, '-') + "-entrance";
-        if (campusGraph[nodeId]) return nodeId;
+        // 3. Return the mapped ID if it exists
+        if (mappings[lookupName]) return mappings[lookupName];
+        
+        // 4. Fallback: try generating an ID (e.g. "Canteen" -> "canteen-entrance")
+        const autoId = lookupName.replace(/ /g, '-') + "-entrance";
+        if (campusGraph[autoId]) return autoId;
+        
+        // 5. Last Resort: Try direct ID match (if user typed "road-node-01")
+        if (campusGraph[lookupName]) return lookupName;
+
         return null;
     }
 
@@ -185,7 +229,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ==========================================
-    // 5. INDOOR NAVIGATION (PRODUCTION MODE)
+    // 5. INDOOR NAVIGATION
     // ==========================================
 
     window.enterBuilding = function(buildingName, floorName) {
@@ -209,9 +253,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
         console.log(`Step 3: Loading Image -> ${floorData.image}`);
 
-        // Clear old layers
+        // Clear layers
         poiLayerGroup.clearLayers();
         routeLayerGroup.clearLayers();
+        debugLayerGroup.clearLayers(); // <--- REMOVE OUTDOOR DEBUG DOTS WHEN INDOORS
+        
         if(map.hasLayer(currentImageLayer)) map.removeLayer(currentImageLayer);
         if (window.currentIndoorLayer) map.removeLayer(window.currentIndoorLayer);
 
@@ -221,7 +267,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         addExitButton();
         
-        // --- PRODUCTION MODE: DEV TOOLS DISABLED ---
+        // --- PRODUCTION MODE: Indoor Debug Disabled ---
         // loadIndoorMarkers(selectedFloor); 
         // window.showBlueLines(); 
     };
@@ -252,13 +298,13 @@ document.addEventListener('DOMContentLoaded', function() {
             color: '#2563eb', weight: 6, opacity: 0.9, dashArray: '10, 10', className: 'walking-path' 
         }).addTo(indoorLayerGroup);
         
-        // 2. Add START Marker (Green)
+        // 2. Add START Marker
         const startNode = indoorNodes[indoorStart];
         L.circleMarker(startNode.coords, { 
             radius: 8, color: 'white', fillColor: '#10b981', fillOpacity: 1 
         }).addTo(indoorLayerGroup).bindPopup("Start: " + startNode.name);
 
-        // 3. Add END Marker (Red)
+        // 3. Add END Marker
         const endNode = indoorNodes[indoorEnd];
         L.circleMarker(endNode.coords, { 
             radius: 8, color: 'white', fillColor: '#ef4444', fillOpacity: 1 
@@ -318,7 +364,29 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // --- CLICK TOOL (CONSOLE ONLY) ---
+    // --- NEW: OUTDOOR GRAPH VISUALIZATION (WITH LABELS) ---
+    function showOutdoorGraph() {
+        debugLayerGroup.clearLayers();
+        Object.keys(campusGraph).forEach(nodeId => {
+            const nodeA = campusGraph[nodeId];
+            
+            // 1. Draw Node Point with TOOLTIP (Label)
+            L.circleMarker(nodeA.coords, {
+                radius: 5, color: '#3b82f6', fillColor: 'white', fillOpacity: 1, weight: 2             
+            }).addTo(debugLayerGroup).bindTooltip(nodeId, { direction: 'top', offset: [0, -5] }); 
+
+            // 2. Draw Lines to Neighbors
+            const neighbors = nodeA.neighbors;
+            Object.keys(neighbors).forEach(neighborId => {
+                const nodeB = campusGraph[neighborId];
+                if (!nodeB) return;
+                L.polyline([nodeA.coords, nodeB.coords], {
+                    color: '#3b82f6', weight: 1, opacity: 0.6, dashArray: '5, 5', interactive: false 
+                }).addTo(debugLayerGroup);
+            });
+        });
+    }
+
     map.on('click', function(e) {
         var coord = Math.round(e.latlng.lat) + ", " + Math.round(e.latlng.lng);
         console.log("Clicked Coordinates:", coord); 
@@ -353,7 +421,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // PRIORITY 3: Indoor Routing (From Dashboard)
     else if (pBuilding && pIndoorStart && pIndoorEnd) {
         setTimeout(() => {
-            // DEBUG CHECKS
             if (typeof indoorNodes === 'undefined') {
                 alert("CRITICAL ERROR: indoor_data.js is not loaded!");
                 return;
@@ -365,11 +432,8 @@ document.addEventListener('DOMContentLoaded', function() {
             if (startId && endId) {
                 const targetFloor = indoorNodes[startId].floor;
                 console.log(`Target Floor determined: ${targetFloor}`);
-                
-                // 1. Load the correct floor image
                 window.enterBuilding(pBuilding, targetFloor);
                 
-                // 2. Draw the path
                 setTimeout(() => {
                     indoorStart = startId;
                     indoorEnd = endId;
@@ -385,7 +449,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // PRIORITY 4: Just Enter Building (General View)
     else if (pBuilding) {
-        const pFloor = urlParams.get('floor'); // Might be null
+        const pFloor = urlParams.get('floor'); 
         setTimeout(() => {
             window.enterBuilding(pBuilding, pFloor);
         }, 500);
