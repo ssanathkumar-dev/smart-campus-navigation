@@ -189,30 +189,40 @@ document.addEventListener('DOMContentLoaded', function() {
     // ==========================================
 
     window.enterBuilding = function(buildingName, floorName) {
-        console.log(`Entering: ${buildingName} - ${floorName}`);
+        console.log(`Step 1: Request received for ${buildingName} - ${floorName}`);
 
         const target = campusData.find(b => b.name === buildingName);
         if (!target || !target.indoorMap) { alert("No indoor map data found."); return; }
 
+        // Logic to ensure we don't accidentally get 'undefined'
         const selectedFloor = floorName || "Ground Floor";
         window.currentFloorName = selectedFloor; 
 
+        // CRITICAL DEBUGGING LOGS
+        console.log(`Step 2: Selected Floor is "${selectedFloor}"`);
+        
         const floorData = target.indoorMap[selectedFloor];
         
+        if (!floorData) {
+            console.error(`ERROR: No data found in map_data.js for key "${selectedFloor}"`);
+            alert(`Error: Missing data for ${selectedFloor}`);
+            return;
+        }
+
+        console.log(`Step 3: Loading Image -> ${floorData.image}`); // <--- CHECK THIS IN CONSOLE!
+
+        // Clear old layers
         poiLayerGroup.clearLayers();
         routeLayerGroup.clearLayers();
         if(map.hasLayer(currentImageLayer)) map.removeLayer(currentImageLayer);
-
         if (window.currentIndoorLayer) map.removeLayer(window.currentIndoorLayer);
+
+        // Load new image
         window.currentIndoorLayer = L.imageOverlay(floorData.image, floorData.bounds).addTo(map);
         map.fitBounds(floorData.bounds);
 
-        // 1. SHOW ALL DOTS (Visible for Dev)
         loadIndoorMarkers(selectedFloor);
-        
         addExitButton();
-
-        // 2. SHOW ALL BLUE LINES (Visible for Dev)
         window.showBlueLines(); 
     };
 
@@ -378,33 +388,52 @@ document.addEventListener('DOMContentLoaded', function() {
         // alert(coord);  <-- REMOVED POPUP
     });
 
-    // ==========================================
-    // 7. INITIALIZATION & EVENTS
+// ==========================================
+    // 7. INITIALIZATION & EVENTS (CORRECTED)
     // ==========================================
     
     const urlParams = new URLSearchParams(window.location.search);
     
-    // CASE A: Outdoor Routing
     const pStart = urlParams.get('start');
     const pEnd = urlParams.get('end');
-    if (pStart && pEnd) {
-        setTimeout(() => drawRoute(pStart, pEnd), 500);
-    }
-
-    // CASE B: Indoor Routing (Auto from Dashboard)
     const pBuilding = urlParams.get('building');
     const pIndoorStart = urlParams.get('indoorStart');
     const pIndoorEnd = urlParams.get('indoorEnd');
+    const forceFloor = urlParams.get('force_floor');
 
-    if (pBuilding && pIndoorStart && pIndoorEnd) {
+    // PRIORITY 1: Outdoor Routing
+    if (pStart && pEnd) {
+        setTimeout(() => drawRoute(pStart, pEnd), 500);
+    }
+    
+    // PRIORITY 2: Dev Mode (Force Floor)
+    else if (forceFloor) {
+        console.log(`Dev Mode: Forcing ${forceFloor}`);
         setTimeout(() => {
+            window.enterBuilding("Main Building", forceFloor);
+        }, 500);
+    }
+
+    // PRIORITY 3: Indoor Routing (From Dashboard)
+    else if (pBuilding && pIndoorStart && pIndoorEnd) {
+        setTimeout(() => {
+            // DEBUG CHECKS
+            if (typeof indoorNodes === 'undefined') {
+                alert("CRITICAL ERROR: indoor_data.js is not loaded!");
+                return;
+            }
+
             const startId = findIndoorNodeIdByName(pIndoorStart);
             const endId = findIndoorNodeIdByName(pIndoorEnd);
 
             if (startId && endId) {
                 const targetFloor = indoorNodes[startId].floor;
+                console.log(`Target Floor determined: ${targetFloor}`);
+                
+                // 1. Load the correct floor image
                 window.enterBuilding(pBuilding, targetFloor);
                 
+                // 2. Draw the path
                 setTimeout(() => {
                     indoorStart = startId;
                     indoorEnd = endId;
@@ -417,25 +446,12 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }, 500);
     } 
-    // CASE D: DEV FORCE OPEN (Any Floor)
-    const forceFloor = urlParams.get('force_floor');
-    if (forceFloor) {
-        console.log(`Dev Mode: Forcing ${forceFloor}`);
-        setTimeout(() => {
-            window.enterBuilding("Main Building", forceFloor);
-        }, 500);
-    }
-    // CASE C: Just Enter Building
+
+    // PRIORITY 4: Just Enter Building (General View)
     else if (pBuilding) {
-        const pFloor = urlParams.get('floor');
+        const pFloor = urlParams.get('floor'); // Might be null
         setTimeout(() => {
             window.enterBuilding(pBuilding, pFloor);
         }, 500);
-    }
-
-    const sidebar = document.querySelector('.sidebar-card');
-    const toggleHandle = document.getElementById('mobile-toggle-handle');
-    if (sidebar && toggleHandle) {
-        toggleHandle.addEventListener('click', () => sidebar.classList.toggle('open'));
     }
 });
