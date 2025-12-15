@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let routeLayerGroup = L.layerGroup().addTo(map);
     let poiLayerGroup = L.layerGroup().addTo(map);
     let indoorLayerGroup = L.layerGroup().addTo(map); 
-    let debugLayerGroup = L.layerGroup().addTo(map); // For Outdoor Debug Lines
+    let debugLayerGroup = L.layerGroup().addTo(map); // Kept to prevent errors, but will stay empty
 
     // ==========================================
     // 2. HELPER FUNCTIONS
@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
         marker.bindPopup(`<b>${building.name}</b>`);
     }
     
-    // LOAD OUTDOOR MARKERS & DEBUG GRAPH
+    // LOAD OUTDOOR MARKERS
     if (typeof campusData !== 'undefined' && campusData.length > 0) {
         map.fitBounds(bounds); 
         campusData.forEach(building => {
@@ -75,8 +75,8 @@ document.addEventListener('DOMContentLoaded', function() {
             addPoiMarker(building); 
         });
 
-        // --- ENABLE OUTDOOR DEBUG VIEW ---
-        showOutdoorGraph(); 
+        // --- DEBUG VIEW DISABLED (CLEAN MAP) ---
+        // showOutdoorGraph(); <--- COMMENTED OUT TO HIDE BLUE LINES
     }
 
     // ==========================================
@@ -144,24 +144,15 @@ document.addEventListener('DOMContentLoaded', function() {
     function findNodeIdByName(locationName) {
         if (!locationName) return null;
         const lowerInput = locationName.toLowerCase();
-        
-        // 1. Try to find the object in campusData first
         const poi = campusData.find(item => item.name.toLowerCase().includes(lowerInput));
         
-        // If we found a POI object, use its exact name for the mapping lookup
-        // If not (user typed partial name), use the input string
         const lookupName = poi ? poi.name.toLowerCase() : lowerInput;
 
-        // 2. EXPLICIT MAPPINGS (The Dictionary)
-        // Map "Display Name" -> "Graph Node ID"
         const mappings = {
-            // Hostels & Sports
             "girls hostel": "hostel-g-entrance",
             "boys hostel block": "hostel-b-entrance",
             "gym": "gym-entrance",
             "basketball ground": "basketball-entrance",
-            
-            // Academic & Admin
             "mitm school area": "school-area-entrance",
             "mitm school play area": "school-play-entrance",
             "main building": "main-building-entrance",
@@ -171,12 +162,8 @@ document.addEventListener('DOMContentLoaded', function() {
             "mba, mca block": "mba-mca-entrance",
             "bca bba block": "bca-bba-entrance",
             "auditorium": "auditorium-entrance",
-            
-            // Utilities
             "parking lot a": "parking-a-entrance",
             "canteen": "canteen-entrance",
-
-            // Food Court / Stalls (These were likely failing before)
             "mitm juice stall": "juice-stall",
             "mitm store": "mitm-store",
             "mitm bakery": "mitm-bakery",
@@ -188,14 +175,9 @@ document.addEventListener('DOMContentLoaded', function() {
             "mitm corns": "mitm-corns"
         };
         
-        // 3. Return the mapped ID if it exists
         if (mappings[lookupName]) return mappings[lookupName];
-        
-        // 4. Fallback: try generating an ID (e.g. "Canteen" -> "canteen-entrance")
         const autoId = lookupName.replace(/ /g, '-') + "-entrance";
         if (campusGraph[autoId]) return autoId;
-        
-        // 5. Last Resort: Try direct ID match (if user typed "road-node-01")
         if (campusGraph[lookupName]) return lookupName;
 
         return null;
@@ -229,7 +211,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // ==========================================
-    // 5. INDOOR NAVIGATION
+    // 5. INDOOR NAVIGATION (PRODUCTION MODE)
     // ==========================================
 
     window.enterBuilding = function(buildingName, floorName) {
@@ -256,7 +238,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Clear layers
         poiLayerGroup.clearLayers();
         routeLayerGroup.clearLayers();
-        debugLayerGroup.clearLayers(); // <--- REMOVE OUTDOOR DEBUG DOTS WHEN INDOORS
+        debugLayerGroup.clearLayers(); // Clears any stray debug lines
         
         if(map.hasLayer(currentImageLayer)) map.removeLayer(currentImageLayer);
         if (window.currentIndoorLayer) map.removeLayer(window.currentIndoorLayer);
@@ -267,7 +249,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         addExitButton();
         
-        // --- PRODUCTION MODE: Indoor Debug Disabled ---
+        // --- INDOOR DEBUG DISABLED ---
         // loadIndoorMarkers(selectedFloor); 
         // window.showBlueLines(); 
     };
@@ -364,18 +346,15 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // --- NEW: OUTDOOR GRAPH VISUALIZATION (WITH LABELS) ---
+    // --- VISUALIZATION FUNCTION (DISABLED BY DEFAULT) ---
     function showOutdoorGraph() {
         debugLayerGroup.clearLayers();
         Object.keys(campusGraph).forEach(nodeId => {
             const nodeA = campusGraph[nodeId];
-            
-            // 1. Draw Node Point with TOOLTIP (Label)
             L.circleMarker(nodeA.coords, {
                 radius: 5, color: '#3b82f6', fillColor: 'white', fillOpacity: 1, weight: 2             
             }).addTo(debugLayerGroup).bindTooltip(nodeId, { direction: 'top', offset: [0, -5] }); 
 
-            // 2. Draw Lines to Neighbors
             const neighbors = nodeA.neighbors;
             Object.keys(neighbors).forEach(neighborId => {
                 const nodeB = campusGraph[neighborId];
@@ -393,7 +372,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // ==========================================
-    // 7. INITIALIZATION & EVENTS (PRIORITY LOGIC)
+    // 7. INITIALIZATION & EVENTS
     // ==========================================
     
     const urlParams = new URLSearchParams(window.location.search);
